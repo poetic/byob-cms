@@ -1,6 +1,6 @@
 {
   "name": "byob-cms",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Bring your own backend! A client side only cms that speaks graphQL.",
   "main": "index.js",
   "dependencies": {
@@ -22,8 +22,7 @@
     "start": "react-scripts start",
     "build": "babel src -d dist && react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "publish": "npm run build && npm publish"
+    "eject": "react-scripts eject"
   },
   "repository": {
     "type": "git",
