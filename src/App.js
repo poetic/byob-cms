@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import React, { Component } from 'react';
 import StateHOF, { GuardAccessToken } from './StateHOF';
 import { BrowserRouter, Route } from 'react-router-dom';

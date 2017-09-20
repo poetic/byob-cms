@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "lodash": "^4.17.4",
+    "babel-polyfill": "^6.26.0",
     "react": "^15.6.1",
     "react-apollo": "^1.4.15",
     "react-dom": "^15.6.1",
