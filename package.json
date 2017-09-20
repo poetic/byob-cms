@@ -1,0 +1,47 @@
+{
+  "name": "byob-cms",
+  "version": "1.0.0",
+  "description": "Bring your own backend! A client side only cms that speaks graphQL.",
+  "main": "index.js",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "react": "^15.6.1",
+    "react-apollo": "^1.4.15",
+    "react-dom": "^15.6.1",
+    "react-dom-factories": "^1.0.1",
+    "react-jsonschema-form": "^0.49.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.11",
+    "react-selectize": "^3.0.1",
+    "react-transition-group": "^1.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "babel src -d dist && react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poetic/byob-cms.git"
+  },
+  "keywords": [
+    "cms",
+    "graphql",
+    "front-end"
+  ],
+  "author": "Chun Yang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/poetic/byob-cms/issues"
+  },
+  "homepage": "https://github.com/poetic/byob-cms#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1"
+  }
+}
