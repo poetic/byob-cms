@@ -23,7 +23,7 @@
     "build": "babel src -d dist && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "publish": "npm run build && npm run publish"
+    "publish": "npm run build && npm publish"
   },
   "repository": {
     "type": "git",
