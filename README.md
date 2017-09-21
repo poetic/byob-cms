@@ -235,8 +235,16 @@ const config = {
 - defaultSchema.jsonSchema
 - defaultSchema.uiSchema
 
-## predefined jsonSchema widgets
+## pre-defined jsonSchema widgets
 - hasOneWidget
-> TODO: document
-- hasManyWidget
-> TODO: document
+  ```
+  // by default gqlOptionsName is `${fieldName}Options`
+  query ${upperFirst(gqlOptionsName)}Query {
+    ${gqlOptionsName} {
+      value
+      label
+    }
+  }
+  ```
+- hasManyField
+  Same as hasOneWidget, but for array of values
