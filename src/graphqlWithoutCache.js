@@ -9,9 +9,9 @@ class DataFetchingComponent extends React.Component {
     }
   }
   componentDidMount() {
-    const { client, Query } = this.props
+    const { client, Query, queryOptions } = this.props
     client
-      .query({ query: Query, fetchPolicy: 'network-only' })
+      .query({ ...queryOptions, query: Query, fetchPolicy: 'network-only' })
       .then((res) => {
         this.setState({
           loading: false,
@@ -31,11 +31,12 @@ class DataFetchingComponent extends React.Component {
   }
 }
 
-function graphqlWithoutCache (Query) {
+function graphqlWithoutCache (Query, queryOptionsContainer={}) {
   return (Component) => {
     return withApollo((props) => <DataFetchingComponent
       {...props}
       Query={Query}
+      queryOptions={queryOptionsContainer.options}
       Component={Component}
     />)
   }
