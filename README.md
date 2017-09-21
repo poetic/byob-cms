@@ -234,3 +234,9 @@ const config = {
 - defaultSchema
 - defaultSchema.jsonSchema
 - defaultSchema.uiSchema
+
+## predefined jsonSchema widgets
+- hasOneWidget
+> TODO: document
+- hasManyWidget
+> TODO: document
