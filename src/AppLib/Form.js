@@ -3,18 +3,24 @@ import Form from "react-jsonschema-form";
 import HasOneWidget from './formLib/HasOneWidget'
 import HasManyField from './formLib/HasManyField'
 
-const widgets = {
+const defaultWidgets = {
   hasOneWidget: HasOneWidget,
 }
 
-const fields = {
+const defaultFields = {
   hasManyField: HasManyField,
 }
 
 function ExtendedForm (props) {
+  const jsonSchemaFormExtensions = props.jsonSchemaFormExtensions || {}
+  const {
+    widgets={},
+    fields={},
+  } = jsonSchemaFormExtensions
+
   return <Form
-    widgets={widgets}
-    fields={fields}
+    widgets={{...defaultWidgets, ...widgets}}
+    fields={{...defaultFields, ...fields}}
     {...props}
   />
 }

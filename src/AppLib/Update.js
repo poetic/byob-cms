@@ -10,7 +10,7 @@ import nullToUndefined from '../formLib/nullToUndefined'
 import undefinedToNull from '../formLib/undefinedToNull'
 
 function Update (props) {
-  const { resource, mutate, data } = props;
+  const { config, resource, mutate, data } = props;
   const dirtyFormData = data[resource.crudMapping.readOne]
   const purifiedFormData = nullToUndefined(
     removeTypename(
@@ -36,6 +36,7 @@ function Update (props) {
   return <div>
     <h1>update {resource.name}</h1>
     <Form
+      jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
       schema={updateSchema.jsonSchema}
       uiSchema={updateSchema.uiSchema}
       formData={purifiedFormData}

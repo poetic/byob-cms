@@ -13,7 +13,7 @@ class ReadOne extends React.Component {
     }
   }
   render() {
-    const { resource, data } = this.props;
+    const { config, resource, data } = this.props;
     const purifiedFormData = removeTypename(data[resource.crudMapping.readOne])
     if (data.loading) {
       return null;
@@ -28,6 +28,7 @@ class ReadOne extends React.Component {
     }
     return <div>
       <Form
+        jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
         schema={readOneSchema.jsonSchema}
         uiSchema={uiSchema}
         formData={purifiedFormData}

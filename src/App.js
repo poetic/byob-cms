@@ -28,7 +28,7 @@ class App extends Component {
             key={path}
             exact
             path={path}
-            render={(props) => <ReadMany resource={resource} {...props}/>}
+            render={(props) => <ReadMany resource={resource} config={config} {...props}/>}
           />);
         }
         if (create || readOne) {
@@ -37,7 +37,7 @@ class App extends Component {
             key={path}
             exact
             path={path}
-            render={(props) => <CreateOrReadOne resource={resource} {...props}/>}
+            render={(props) => <CreateOrReadOne resource={resource} config={config} {...props}/>}
           />);
         }
         if (update) {
@@ -46,7 +46,7 @@ class App extends Component {
             key={path}
             exact
             path={path}
-            render={(props) => <Update resource={resource} {...props}/>}
+            render={(props) => <Update resource={resource} config={config} {...props}/>}
           />);
         }
         return acc;

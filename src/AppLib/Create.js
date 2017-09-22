@@ -5,7 +5,7 @@ import { upperFirst } from 'lodash';
 import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
 
 function Create (props) {
-  const { resource, mutate } = props;
+  const { resource, mutate, config } = props;
   const onSubmit = async ({ formData }) => {
     try {
       await mutate({ variables: { input: formData } })
@@ -21,6 +21,7 @@ function Create (props) {
   return <div>
     <h1>create {resource.name}</h1>
     <Form
+      jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
       schema={createSchema.jsonSchema}
       uiSchema={createSchema.uiSchema}
       noHtml5Validate

@@ -234,6 +234,12 @@ const config = {
 - defaultSchema
 - defaultSchema.jsonSchema
 - defaultSchema.uiSchema
+- jsonSchemaFormExtensions
+  You can extend json schema form by providing this object
+- jsonSchemaFormExtensions.widgets
+  https://github.com/mozilla-services/react-jsonschema-form#custom-component-registration
+- jsonSchemaFormExtensions.fields
+  https://github.com/mozilla-services/react-jsonschema-form#custom-field-components
 
 ## pre-defined jsonSchema widgets
 - hasOneWidget
@@ -246,5 +252,8 @@ const config = {
     }
   }
   ```
+  props:
+  - ui:options
+  - ui:options.gqlOptionsName
 - hasManyField
   Same as hasOneWidget, but for array of values
