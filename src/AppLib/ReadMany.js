@@ -134,16 +134,18 @@ class ReadMany extends React.Component  {
           </Link>
           : null
       }
-      <table className="table">
-        <thead>
-          <tr>
-            {thElements}
-          </tr>
-        </thead>
-        <tbody>
-          {trElements}
-        </tbody>
-      </table>
+      <div style={{ overflowX: 'scroll' }}>
+        <table className="table">
+          <thead>
+            <tr>
+              {thElements}
+            </tr>
+          </thead>
+          <tbody>
+            {trElements}
+          </tbody>
+        </table>
+      </div>
     </div>
   }
 }

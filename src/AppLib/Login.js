@@ -31,11 +31,18 @@ class Login extends React.Component {
       }
     }
 
-    return <div>
+    const containerStyle = {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
+
+    return <div style={containerStyle}>
       <h1>Login</h1>
       <form onSubmit={onSubmit}>
         <input
-          type="text"
+          type="password"
           value={this.state.code}
           onChange={e => this.setState({ code: e.target.value })}
         />

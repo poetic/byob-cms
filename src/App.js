@@ -7,6 +7,7 @@ import CreateOrReadOne from './AppLib/CreateOrReadOne';
 import ReadMany from './AppLib/ReadMany';
 import Update from './AppLib/Update';
 import IndexRoute from './AppLib/IndexRoute';
+import NavBar from './AppLib/NavBar';
 
 class App extends Component {
   render() {
@@ -53,12 +54,15 @@ class App extends Component {
       }, [])
 
     return (
-      <BrowserRouter>
-        <div className="container-fluid">
-          <IndexRoute config={config}/>
-          {resourceRouteElements}
-        </div>
-      </BrowserRouter>
+      <div>
+        <NavBar/>
+        <BrowserRouter>
+          <div className="container-fluid">
+            <IndexRoute config={config}/>
+            {resourceRouteElements}
+          </div>
+        </BrowserRouter>
+      </div>
     );
   }
 }
