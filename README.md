@@ -2,15 +2,20 @@
 byob-cms is a react component for client only CMS
 There are three basic concepts in byob-cms:
 - config
+
   "config" is an javascript object that contains all the info needed
   for byob-cms to build the cms.
   You should pass config into byob-cms component as a prop.
+
 - resource
+
   "resource" is a RESTful concept.
   You can do CRUD on the records in resources.
   You can think of a resource as a class and a record as an instance,
   or a resource as a model and a record as a document.
+
 - schema
+
   We use https://github.com/mozilla-services/react-jsonschema-form package
   to render forms in the cms. There for you can provide
   jsonSchema and uiSchema to define the structure of the form.
