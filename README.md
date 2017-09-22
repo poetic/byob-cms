@@ -6,15 +6,13 @@ There are three basic concepts in byob-cms:
   for byob-cms to build the cms.
   You should pass config into byob-cms component as a prop.
 
-- resource
-
+- resource  
   "resource" is a RESTful concept.
   You can do CRUD on the records in resources.
   You can think of a resource as a class and a record as an instance,
   or a resource as a model and a record as a document.
 
-- schema
-
+- schema  
   We use https://github.com/mozilla-services/react-jsonschema-form package
   to render forms in the cms. There for you can provide
   jsonSchema and uiSchema to define the structure of the form.
@@ -184,40 +182,40 @@ const config = {
 ```
 
 ## config API reference
-- graphqlUrl
+- graphqlUrl  
   The backend graphql url used by byob-cms
 - resources
-- resources.[].name
+- resources.[].name  
   The name of the resource, need to be singular
-- resources.[].uniqKey
+- resources.[].uniqKey  
   Unique key used in your records. Most of the time its 'id' or '\_id'.
-- resources.[].crudMapping
+- resources.[].crudMapping  
   GraphQL mutation and query names for crud options
-- resources.[].crudMapping.create
+- resources.[].crudMapping.create  
   ```
   mutation ${crudMapping.create}($input: ${upperFirst(resource.name + 'Input')}!) {
     ${crudMapping.create}(${resource.name} : $input)
   }
   ```
-- resources.[].crudMapping.update
+- resources.[].crudMapping.update  
   ```
   mutation ${crudMapping.update}($input: ${upperFirst(resource.name + 'Input')}!) {
     ${crudMapping.update}(${resource.name} : $input, ${uniqKey}: "${uniqKeyValue}")
   }
   ```
-- resources.[].crudMapping.delete
+- resources.[].crudMapping.delete  
   ```
   mutation ${crudMapping.delete}($${uniqKey}: String!) {
     ${crudMapping.delete}(${uniqKey}: $${uniqKey})
   }
   ```
-- resources.[].crudMapping.readOne
+- resources.[].crudMapping.readOne  
   ```
   query ${crudMapping.readOne}($${uniqKey}: String!) {
     ${crudMapping.readOne}(${uniqKey}: $${uniqKey}) ${jsonSchemaToGqlQuery(readOneSchema.jsonSchema)}
   }
   ```
-- resources.[].crudMapping.readMany
+- resources.[].crudMapping.readMany  
   ```
   query ${crudMapping.readMany} {
     ${crudMapping.readMany} ${jsonSchemaToGqlQuery(readManySchema.jsonSchema)}
@@ -238,15 +236,15 @@ const config = {
 - defaultSchema
 - defaultSchema.jsonSchema
 - defaultSchema.uiSchema
-- jsonSchemaFormExtensions
+- jsonSchemaFormExtensions  
   You can extend json schema form by providing this object
-- jsonSchemaFormExtensions.widgets
+- jsonSchemaFormExtensions.widgets  
   https://github.com/mozilla-services/react-jsonschema-form#custom-component-registration
-- jsonSchemaFormExtensions.fields
+- jsonSchemaFormExtensions.fields  
   https://github.com/mozilla-services/react-jsonschema-form#custom-field-components
 
 ## pre-defined jsonSchema widgets
-- hasOneWidget
+- hasOneWidget  
   ```
   // by default gqlOptionsName is `${fieldName}Options`
   query ${upperFirst(gqlOptionsName)}Query {
@@ -259,5 +257,5 @@ const config = {
   props:
   - ui:options
   - ui:options.gqlOptionsName
-- hasManyField
+- hasManyField  
   Same as hasOneWidget, but for array of values
