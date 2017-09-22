@@ -1,8 +1,7 @@
 # BYOB CMS
 byob-cms is a react component for client only CMS
 There are three basic concepts in byob-cms:
-- config
-
+- config  
   "config" is an javascript object that contains all the info needed
   for byob-cms to build the cms.
   You should pass config into byob-cms component as a prop.
