@@ -1,6 +1,5 @@
 import React from 'react';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import { connect } from 'react-redux';
 import { ApolloClient, ApolloProvider, createNetworkInterface } from 'react-apollo';
 import { get, once } from 'lodash'
 
@@ -27,22 +26,6 @@ function setAccessToken (accessToken) {
     type: 'SET_ACCESS_TOKEN',
     accessToken,
   }
-}
-
-function GuardAccessToken (Component, GuardComponent) {
-  const ComponentWithGuard = (props) => {
-    if (props.accessToken) {
-      return <Component {...props}/>
-    } else {
-      return GuardComponent ? <GuardComponent/> : null
-    }
-  }
-
-  const ComponentWithState = connect(
-    (state) => ({ accessToken: state.accessToken }),
-  )(ComponentWithGuard)
-
-  return ComponentWithState
 }
 
 function createProvider ({ config: { graphqlUrl } }) {
@@ -112,4 +95,4 @@ export default function StoreHOF (Component) {
   }
 }
 
-export { accessToken, setAccessToken, GuardAccessToken }
+export { accessToken, setAccessToken }

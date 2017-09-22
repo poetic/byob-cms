@@ -1,7 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
-import { setAccessToken } from '../StateHOF'
 import LoginMutation from '../resolvers/Mutation/LoginMutation'
 import alertFirstGqlMsg from '../alertFirstGqlMsg'
 
@@ -52,7 +50,6 @@ class Login extends React.Component {
   }
 }
 
-const LoginFormWithState = connect(null, { setAccessToken })(Login)
-const LoginFormWithData = graphql(LoginMutation)(LoginFormWithState)
+const LoginFormWithData = graphql(LoginMutation)(Login)
 
 export default LoginFormWithData

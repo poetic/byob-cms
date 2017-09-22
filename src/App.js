@@ -1,6 +1,7 @@
 import 'babel-polyfill/dist/polyfill';
 import React, { Component } from 'react';
-import StateHOF, { GuardAccessToken } from './StateHOF';
+import { connect } from 'react-redux';
+import StateHOF, { setAccessToken } from './StateHOF';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Login from './AppLib/Login'
 import CreateOrReadOne from './AppLib/CreateOrReadOne';
@@ -67,4 +68,27 @@ class App extends Component {
   }
 }
 
-export default StateHOF(GuardAccessToken(App, Login));
+function AppWithGuard (props) {
+  const { config } = props
+  // TODO if LoginComponent is a string, we return the component for that type
+  const GuardComponent = config.Login || Login
+
+  const ComponentWithGuard = (props) => {
+    if (props.accessToken) {
+      return <App {...props}/>
+    } else {
+      return GuardComponent
+        ? <GuardComponent setAccessToken={props.setAccessToken}/>
+        : null
+    }
+  }
+
+  const ComponentWithState = connect(
+    (state) => ({ accessToken: state.accessToken }),
+    { setAccessToken }
+  )(ComponentWithGuard)
+
+  return <ComponentWithState {...props}/>
+}
+
+export default StateHOF(AppWithGuard);
