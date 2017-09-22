@@ -233,6 +233,17 @@ const config = {
 - readManySchema
 - readManySchema.jsonSchema
 - readManySchema.uiSchema
+- readManySchema.cellFormatter  
+  cellFormatter is a funciton used to format each td in the table  
+  function signature: (value, object, fieldName) -> ReactElement  
+  default value:
+  ```
+  function defaultCellFormatter (value) {
+    return <pre>
+      {JSON.stringify(value, null, 2)}
+    </pre>
+  }
+  ```
 - defaultSchema
 - defaultSchema.jsonSchema
 - defaultSchema.uiSchema
