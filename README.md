@@ -256,8 +256,7 @@ const config = {
 - Login
   You can define your own custom Login component, setAccessToken function is
   passed in as a prop. After you call it, the following graphql requests will
-  contain this value in the header as "authorization".
-
+  contain this value in the header as "authorization".  
   You can also use built in components like this:
   ```
   import { CodeLogin } from 'byob-cms';
