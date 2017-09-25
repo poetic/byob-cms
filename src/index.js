@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './stylesheets/react-selectize.css';
 import './stylesheets/react-jsonschemaform.css';
-import App from './App';
+import App, { CodeLogin } from './App';
 
 const config = {
   graphqlUrl: 'http://localhost:4000/admin-graphql',
+  Login: CodeLogin,
   jsonSchemaFormExtensions: {
     // widgets: {
     //   testWidget: () => null
@@ -64,9 +65,9 @@ const config = {
         // delete: 'deleteLifeEvent',
       },
       readManySchema: {
+        // NOTE: this returns a string or react component
         cellFormatter(value, object, fieldName) {
-          // NOTE: this returns a react component
-          return <span>{JSON.stringify(value)}</span>
+          return JSON.stringify(value)
         }
       },
       defaultSchema: {

@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import StateHOF, { setAccessToken } from './StateHOF';
 import { BrowserRouter, Route } from 'react-router-dom';
-import Login from './AppLib/Login'
 import CreateOrReadOne from './AppLib/CreateOrReadOne';
 import ReadMany from './AppLib/ReadMany';
 import Update from './AppLib/Update';
 import IndexRoute from './AppLib/IndexRoute';
 import NavBar from './AppLib/NavBar';
+import CodeLogin from './AppLib/LoginLib/CodeLogin'
 
 class App extends Component {
   render() {
@@ -68,17 +68,22 @@ class App extends Component {
   }
 }
 
+function DefaultLogin () {
+  return <div>
+    <h1>You need to provide a React Component to the "Login" option</h1>
+  </div>
+}
+
 function AppWithGuard (props) {
   const { config } = props
-  // TODO if LoginComponent is a string, we return the component for that type
-  const GuardComponent = config.Login || Login
+  const Login = config.Login || DefaultLogin
 
   const ComponentWithGuard = (props) => {
     if (props.accessToken) {
       return <App {...props}/>
     } else {
-      return GuardComponent
-        ? <GuardComponent setAccessToken={props.setAccessToken}/>
+      return Login
+        ? <Login setAccessToken={props.setAccessToken}/>
         : null
     }
   }
@@ -92,3 +97,6 @@ function AppWithGuard (props) {
 }
 
 export default StateHOF(AppWithGuard);
+export {
+  CodeLogin,
+}
