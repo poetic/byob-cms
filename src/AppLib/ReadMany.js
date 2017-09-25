@@ -1,117 +1,71 @@
 import React from 'react'
 import { gql, graphql } from 'react-apollo';
-import { remove } from 'lodash';
 import { Link } from 'react-router-dom';
 import jsonSchemaToGqlQuery from '../GqlCmsConfigLib/jsonSchemaToGqlQuery';
 import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
 import ensureUniqKey from '../GqlCmsConfigLib/ensureUniqKey'
-
-function defaultCellFormatter (value) {
-  return <pre>
-    {JSON.stringify(value, null, 2)}
-  </pre>
-}
-
-function TdAction ({ resource, row, handleDelete }) {
-  return <td style={{ display: 'inline-flex' }}>
-    {
-      resource.crudMapping.readOne
-        ? <Link to={`/${resource.name}/${row[resource.uniqKey]}`}>
-          <button>view</button>
-        </Link>
-        : null
-    }
-    {
-      resource.crudMapping.update
-        ? <Link to={`/${resource.name}/${row[resource.uniqKey]}/edit`}>
-          <button>update</button>
-        </Link>
-        : null
-    }
-    {
-      resource.crudMapping.delete
-        ? <button onClick={handleDelete}>delete</button>
-        : null
-    }
-  </td>
-}
-
-function Tr (props) {
-  const {
-    row,
-    resource,
-    cellFormatter,
-    mutate,
-    ReadManyQuery,
-    columnNames,
-  } = props
-
-  const handleDelete = async () => {
-    const confirm = window.confirm('Are you sure you want to delete?')
-    if (!confirm) {
-      return
-    }
-    const uniqKeyQuery = { [resource.uniqKey]: row[resource.uniqKey] }
-    try {
-      await mutate({
-        variables: uniqKeyQuery,
-        update(store, { data }) {
-          const readManyQueryData = store.readQuery({ query: ReadManyQuery })
-          remove(readManyQueryData[resource.crudMapping.readMany], uniqKeyQuery)
-          store.writeQuery({ query: ReadManyQuery, data: readManyQueryData });
-        }
-      })
-      window.alert('Delete Success')
-    } catch (e) {
-      window.alert(e)
-    }
-  }
-
-  const tdFieldElements = columnNames.map((columnName) => {
-    return <td key={columnName}>
-      {cellFormatter(row[columnName], row, columnName)}
-    </td>
-  })
-
-  return <tr>
-    <TdAction
-      key="actions"
-      resource={resource}
-      row={row}
-      handleDelete={handleDelete}
-    />
-    {tdFieldElements}
-  </tr>
-}
+import getReadManyInputQueryString from './ReadManyLib/getReadManyInputQueryString'
+import defaultCellFormatter from './ReadManyLib/defaultCellFormatter'
+import Tr from './ReadManyLib/Tr'
+import { withApollo } from 'react-apollo'
 
 class ReadMany extends React.Component  {
-  componentDidMount() {
-    const { loading, refetch } = this.props.data
-    if (!loading) {
-      refetch()
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: { loading: true },
+      skip: null,
+      limit: null,
     }
   }
+  componentDidMount() {
+    this.fetchReadMany()
+  }
+  fetchReadMany() {
+    const { readManySchema, resource, client } = this.props
+    const { uniqKey, crudMapping } = resource;
+    const fieldsQuery = jsonSchemaToGqlQuery(
+      ensureUniqKey(readManySchema.jsonSchema, uniqKey)
+    )
+
+    const ReadManyInputQueryString = getReadManyInputQueryString(readManySchema)
+    const ReadManyQuery = gql`
+  query ${crudMapping.readMany} {
+    ${crudMapping.readMany} ${ReadManyInputQueryString} ${fieldsQuery}
+  }
+  `;
+
+    client
+      .query({ query: ReadManyQuery, fetchPolicy: 'network-only' })
+      .then(({ data }) => {
+        this.setState({
+          data,
+        })
+      })
+      .catch((e) => {
+        throw e;
+      })
+  }
   render() {
-    const {
-      data,
-      mutate,
-      resource,
-      ReadManyQuery,
-      readManySchema
-    } = this.props
+    const { data } = this.state
 
     if (data.loading) {
       return null
     }
+
+    const {
+      mutate,
+      resource,
+      readManySchema,
+    } = this.props
+
     const columnNames = Object.keys(readManySchema.jsonSchema.properties)
     const rows = data[resource.crudMapping.readMany]
 
-    const thActionsElement = <th key="actions">
-      Actions
-    </th>
-      const thFieldElements = columnNames.map((columnName) => {
-        return <th key={columnName}>{columnName}</th>
-      })
+    const thActionsElement = <th key="actions">Actions</th>
+    const thFieldElements = columnNames.map((columnName) => {
+      return <th key={columnName}>{columnName}</th>
+    })
     const thElements = [thActionsElement].concat(thFieldElements)
 
     const cellFormatter = readManySchema.cellFormatter || defaultCellFormatter
@@ -121,7 +75,7 @@ class ReadMany extends React.Component  {
       resource={resource}
       cellFormatter={cellFormatter}
       mutate={mutate}
-      ReadManyQuery={ReadManyQuery}
+      fetchReadMany={() => this.fetchReadMany()}
       columnNames={columnNames}
     />)
 
@@ -157,19 +111,9 @@ function ReadManyWithData (props) {
     config,
     resource,
     crudType: 'readMany',
-    uniqKey,
   })
-  const fieldsQuery = jsonSchemaToGqlQuery(
-    ensureUniqKey(readManySchema.jsonSchema, uniqKey)
-  )
 
-  let Component = ReadMany
-  const ReadManyQuery = gql`
-  query ${crudMapping.readMany} {
-    ${crudMapping.readMany} ${fieldsQuery}
-  }
-  `;
-  Component = graphql(ReadManyQuery)(Component)
+  let Component = withApollo(ReadMany)
 
   if (crudMapping.delete) {
     const DeleteQuery = gql`
@@ -183,7 +127,6 @@ function ReadManyWithData (props) {
   return <Component
     {...props}
     readManySchema={readManySchema}
-    ReadManyQuery={ReadManyQuery}
   />
 }
 

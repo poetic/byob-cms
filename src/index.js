@@ -221,10 +221,10 @@ const config = {
         },
         uiSchema: {
           lifeEventIds: {
-            'ui:field': 'lifeEventIdsField'
+            'ui:field': 'hasManyField'
           },
           tagIds: {
-            'ui:field': 'tagIdsField'
+            'ui:field': 'hasManyField'
           },
         },
       }
