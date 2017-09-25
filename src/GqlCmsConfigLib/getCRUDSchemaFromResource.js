@@ -1,8 +1,10 @@
-function getCRUDSchemaFromResource ({ resource, crudType }) {
+function getCRUDSchemaFromResource ({ config, resource, crudType }) {
   const key = crudType + 'Schema'
   const schema = {
-    ...resource[key],
+    ...config.defaultSchema,
+    ...config[key],
     ...resource.defaultSchema,
+    ...resource[key],
   }
   return schema
 }

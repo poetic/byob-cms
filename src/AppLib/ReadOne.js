@@ -19,6 +19,7 @@ class ReadOne extends React.Component {
       return null;
     }
     const readOneSchema = getCRUDSchemaFromResource({
+      config,
       resource,
       crudType: 'readOne'
     })
@@ -42,9 +43,10 @@ class ReadOne extends React.Component {
 }
 
 function ReadOneWithData (props) {
-  const { resource } = props;
+  const { config, resource } = props;
   const { crudMapping, uniqKey } = resource;
   const readOneSchema = getCRUDSchemaFromResource({
+    config,
     resource,
     crudType: 'readOne'
   })

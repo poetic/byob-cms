@@ -15,6 +15,7 @@ function Create (props) {
     }
   }
   const createSchema = getCRUDSchemaFromResource({
+    config,
     resource,
     crudType: 'create'
   })

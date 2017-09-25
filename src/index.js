@@ -12,6 +12,16 @@ const config = {
     //   testWidget: () => null
     // }
   },
+  readManySchema: {
+    // NOTE: this returns a string or react component
+    cellFormatter(value, object, fieldName) {
+      return JSON.stringify(value)
+    },
+    paginationStrategy: {
+      type: 'STATIC',
+      itemsPerPage: 2,
+    },
+  },
   resources: [
     {
       // NOTE: name is singular
@@ -63,12 +73,6 @@ const config = {
         readOne: 'lifeEvent',
         update: 'updateLifeEvent',
         // delete: 'deleteLifeEvent',
-      },
-      readManySchema: {
-        // NOTE: this returns a string or react component
-        cellFormatter(value, object, fieldName) {
-          return JSON.stringify(value)
-        }
       },
       defaultSchema: {
         jsonSchema: {

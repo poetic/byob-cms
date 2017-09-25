@@ -30,6 +30,7 @@ function Update (props) {
     }
   }
   const updateSchema = getCRUDSchemaFromResource({
+    config,
     resource,
     crudType: 'update'
   })
@@ -47,9 +48,10 @@ function Update (props) {
 }
 
 function UpdateWithData (props) {
-  const { resource } = props;
+  const { config, resource } = props;
   const { crudMapping, uniqKey } = resource;
   const updateSchema = getCRUDSchemaFromResource({
+    config,
     resource,
     crudType: 'update'
   })

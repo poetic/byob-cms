@@ -151,9 +151,10 @@ class ReadMany extends React.Component  {
 }
 
 function ReadManyWithData (props) {
-  const { resource } = props;
+  const { config, resource } = props;
   const { uniqKey, crudMapping } = resource;
   const readManySchema = getCRUDSchemaFromResource({
+    config,
     resource,
     crudType: 'readMany',
     uniqKey,
