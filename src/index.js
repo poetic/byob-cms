@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './stylesheets/react-selectize.css';
 import './stylesheets/react-jsonschemaform.css';
+import './stylesheets/react-paginate.css';
 import App, { CodeLogin } from './App';
 
 const config = {

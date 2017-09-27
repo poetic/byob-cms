@@ -8,14 +8,33 @@ import getReadManyInputQueryString from './ReadManyLib/getReadManyInputQueryStri
 import defaultCellFormatter from './ReadManyLib/defaultCellFormatter'
 import Tr from './ReadManyLib/Tr'
 import { withApollo } from 'react-apollo'
+import ReactPaginate from 'react-paginate'
+import { get } from 'lodash'
+
+function Paginate ({ skip, limit, total, onSkipChange }) {
+  const pageCount = Math.ceil(total / limit)
+  const forcePage = Math.ceil(skip / limit)
+  return <ReactPaginate
+    activeClassName="active"
+    containerClassName="react-paginate"
+    forcePage={forcePage}
+    onPageChange={({ selected }) => onSkipChange(limit * selected)}
+    pageCount={pageCount}
+    pageRangeDisplayed={5}
+    marginPagesDisplayed={3}
+  />
+}
 
 class ReadMany extends React.Component  {
   constructor(props) {
     super(props)
+    const limit = get(props, 'readManySchema.paginationStrategy.itemsPerPage', 10)
     this.state = {
-      data: { loading: true },
-      skip: null,
-      limit: null,
+      loading: true,
+      items: [],
+      total: 0,
+      skip: 0,
+      limit,
     }
   }
   componentDidMount() {
@@ -28,18 +47,30 @@ class ReadMany extends React.Component  {
       ensureUniqKey(readManySchema.jsonSchema, uniqKey)
     )
 
-    const ReadManyInputQueryString = getReadManyInputQueryString(readManySchema)
+    const { skip, limit } = this.state
+
+    const ReadManyInputQueryString = getReadManyInputQueryString(
+      readManySchema,
+      { skip, limit }
+    )
     const ReadManyQuery = gql`
   query ${crudMapping.readMany} {
-    ${crudMapping.readMany} ${ReadManyInputQueryString} ${fieldsQuery}
+    ${crudMapping.readMany} ${ReadManyInputQueryString} {
+      items ${fieldsQuery}
+      total
+    }
   }
   `;
 
+    this.setState({ loading: true })
     client
       .query({ query: ReadManyQuery, fetchPolicy: 'network-only' })
       .then(({ data }) => {
+        const { items, total } = data[resource.crudMapping.readMany]
         this.setState({
-          data,
+          loading: false,
+          items,
+          total,
         })
       })
       .catch((e) => {
@@ -47,9 +78,15 @@ class ReadMany extends React.Component  {
       })
   }
   render() {
-    const { data } = this.state
+    const {
+      loading,
+      items,
+      limit,
+      total,
+      skip,
+    } = this.state
 
-    if (data.loading) {
+    if (loading) {
       return null
     }
 
@@ -60,7 +97,6 @@ class ReadMany extends React.Component  {
     } = this.props
 
     const columnNames = Object.keys(readManySchema.jsonSchema.properties)
-    const rows = data[resource.crudMapping.readMany]
 
     const thActionsElement = <th key="actions">Actions</th>
     const thFieldElements = columnNames.map((columnName) => {
@@ -69,7 +105,7 @@ class ReadMany extends React.Component  {
     const thElements = [thActionsElement].concat(thFieldElements)
 
     const cellFormatter = readManySchema.cellFormatter || defaultCellFormatter
-    const trElements = rows.map((row) => <Tr
+    const trElements = items.map((row) => <Tr
       key={row[resource.uniqKey]}
       row={row}
       resource={resource}
@@ -99,6 +135,19 @@ class ReadMany extends React.Component  {
             {trElements}
           </tbody>
         </table>
+        {
+          readManySchema.paginationStrategy
+            ? <Paginate
+              limit={limit}
+              total={total}
+              skip={skip}
+              onSkipChange={(nextSkip) => this.setState(
+                { skip: nextSkip, items: [] },
+                () => this.fetchReadMany()
+              )}
+            />
+            : null
+        }
       </div>
     </div>
   }
