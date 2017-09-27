@@ -25,6 +25,51 @@ function Paginate ({ skip, limit, total, onSkipChange }) {
   />
 }
 
+function ThFieldSort ({ columnName, readManySchema, sort, onSortChange }) {
+  if (!readManySchema.sortStrategy) {
+    return null
+  }
+
+  const { type } = readManySchema.sortStrategy
+
+  function changeSort (order) {
+    if (type === 'SINGLE') {
+      onSortChange([{
+        field: columnName,
+        order,
+      }])
+    } else {
+      throw new Error(`${type} is not supported.`)
+    }
+  }
+
+  const sortOrder = get(sort.find(({ field }) => field === columnName), 'order')
+  return <div>
+    {
+      sortOrder !== 'ASC'
+        ? <button onClick={() => changeSort('ASC')}>TO ASC</button>
+        : null
+    }
+    {
+      sortOrder !== 'DESC'
+        ? <button onClick={() => changeSort('DESC')}>TO DESC</button>
+        : null
+    }
+  </div>
+}
+
+function ThField ({ columnName, readManySchema, sort, onSortChange }) {
+  return <th>
+    {columnName}
+    <ThFieldSort
+      columnName={columnName}
+      readManySchema={readManySchema}
+      sort={sort}
+      onSortChange={onSortChange}
+    />
+  </th>
+}
+
 class ReadMany extends React.Component  {
   constructor(props) {
     super(props)
@@ -35,6 +80,7 @@ class ReadMany extends React.Component  {
       total: 0,
       skip: 0,
       limit,
+      sort: [],
     }
   }
   componentDidMount() {
@@ -47,11 +93,11 @@ class ReadMany extends React.Component  {
       ensureUniqKey(readManySchema.jsonSchema, uniqKey)
     )
 
-    const { skip, limit } = this.state
+    const { skip, limit, sort } = this.state
 
     const ReadManyInputQueryString = getReadManyInputQueryString(
       readManySchema,
-      { skip, limit }
+      { skip, limit, sort }
     )
     const ReadManyQuery = gql`
   query ${crudMapping.readMany} {
@@ -84,6 +130,7 @@ class ReadMany extends React.Component  {
       limit,
       total,
       skip,
+      sort,
     } = this.state
 
     if (loading) {
@@ -100,7 +147,18 @@ class ReadMany extends React.Component  {
 
     const thActionsElement = <th key="actions">Actions</th>
     const thFieldElements = columnNames.map((columnName) => {
-      return <th key={columnName}>{columnName}</th>
+      return <ThField
+        key={columnName}
+        columnName={columnName}
+        readManySchema={readManySchema}
+        sort={sort}
+        onSortChange={(nextSort) => {
+          this.setState(
+            { sort: nextSort, items: [] },
+            () => this.fetchReadMany()
+          )
+        }}
+      />
     })
     const thElements = [thActionsElement].concat(thFieldElements)
 

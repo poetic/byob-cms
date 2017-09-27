@@ -1,18 +1,25 @@
 function getReadManyInputQueryString (schema, variables={}) {
-  const { paginationStrategy } = schema
-  if (!paginationStrategy) {
-    return ''
+  const { paginationStrategy, sortStrategy } = schema
+  const inputPairs = []
+  if (paginationStrategy) {
+    inputPairs.push({ key: 'skip', value: variables.skip })
+    inputPairs.push({ key: 'limit', value: variables.limit })
   }
 
-  const keys = Object.keys(variables)
-  if (keys.length === 0) {
-    return ''
-  }
-  const string = keys
-    .map((key) => {
-      return [key, variables[key]].join(': ')
+  if (sortStrategy) {
+    // note: the replace is used to remove quotes from properties
+    inputPairs.push({
+      key: 'sort',
+      value: JSON.stringify(variables.sort).replace(/"([^(")"]+)":/g,"$1:")
     })
-    .join(' ')
+  }
+
+  const string = inputPairs
+    .map(({ key, value }) => {
+      return [key, value].join(': ')
+    })
+    .join(', ')
+
   return `(${string})`
 }
 

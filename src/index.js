@@ -22,6 +22,9 @@ const config = {
       type: 'STATIC',
       itemsPerPage: 2,
     },
+    sortStrategy: {
+      type: 'SINGLE'
+    },
   },
   resources: [
     {
