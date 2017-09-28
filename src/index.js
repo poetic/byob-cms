@@ -25,6 +25,9 @@ const config = {
     sortStrategy: {
       type: 'SINGLE'
     },
+    searchStrategy: {
+      type: 'FULLTEXT'
+    },
   },
   resources: [
     {

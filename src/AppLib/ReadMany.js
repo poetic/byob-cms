@@ -25,6 +25,27 @@ function Paginate ({ skip, limit, total, onSkipChange }) {
   />
 }
 
+class Search extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      text: this.props.search
+    }
+  }
+  render() {
+    const { onSearchChange } = this.props
+    const { text } = this.state
+    return <div>
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => this.setState({ text: e.target.value })}
+      />
+      <button onClick={() => onSearchChange(text)}>Search</button>
+    </div>
+  }
+}
+
 function ThFieldSort ({ columnName, readManySchema, sort, onSortChange }) {
   if (!readManySchema.sortStrategy) {
     return null
@@ -81,23 +102,26 @@ class ReadMany extends React.Component  {
       skip: 0,
       limit,
       sort: [],
+      search: '',
     }
   }
   componentDidMount() {
-    this.fetchReadMany()
+    this.fetchReadMany({ forceSkipTo: this.state.skip })
   }
-  fetchReadMany() {
+  fetchReadMany(options={}) {
+    const { forceSkipTo } = options
     const { readManySchema, resource, client } = this.props
     const { uniqKey, crudMapping } = resource;
     const fieldsQuery = jsonSchemaToGqlQuery(
       ensureUniqKey(readManySchema.jsonSchema, uniqKey)
     )
 
-    const { skip, limit, sort } = this.state
+    const { limit, sort, search } = this.state
+    const skip = forceSkipTo || 0
 
     const ReadManyInputQueryString = getReadManyInputQueryString(
       readManySchema,
-      { skip, limit, sort }
+      { skip, limit, sort, search }
     )
     const ReadManyQuery = gql`
   query ${crudMapping.readMany} {
@@ -117,6 +141,7 @@ class ReadMany extends React.Component  {
           loading: false,
           items,
           total,
+          skip,
         })
       })
       .catch((e) => {
@@ -131,6 +156,7 @@ class ReadMany extends React.Component  {
       total,
       skip,
       sort,
+      search,
     } = this.state
 
     if (loading) {
@@ -154,7 +180,7 @@ class ReadMany extends React.Component  {
         sort={sort}
         onSortChange={(nextSort) => {
           this.setState(
-            { sort: nextSort, items: [] },
+            { sort: nextSort },
             () => this.fetchReadMany()
           )
         }}
@@ -182,6 +208,17 @@ class ReadMany extends React.Component  {
           </Link>
           : null
       }
+      {
+        readManySchema.searchStrategy
+          ? <Search
+            search={search}
+            onSearchChange={(nextSearch) => this.setState(
+              { search: nextSearch },
+              () => this.fetchReadMany()
+            )}
+          />
+          : null
+      }
       <div style={{ overflowX: 'scroll' }}>
         <table className="table">
           <thead>
@@ -200,8 +237,8 @@ class ReadMany extends React.Component  {
               total={total}
               skip={skip}
               onSkipChange={(nextSkip) => this.setState(
-                { skip: nextSkip, items: [] },
-                () => this.fetchReadMany()
+                { skip: nextSkip },
+                () => this.fetchReadMany({ forceSkipTo: nextSkip })
               )}
             />
             : null

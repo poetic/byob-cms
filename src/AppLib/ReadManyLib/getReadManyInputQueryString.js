@@ -1,5 +1,5 @@
 function getReadManyInputQueryString (schema, variables={}) {
-  const { paginationStrategy, sortStrategy } = schema
+  const { paginationStrategy, sortStrategy, searchStrategy } = schema
   const inputPairs = []
   if (paginationStrategy) {
     inputPairs.push({ key: 'skip', value: variables.skip })
@@ -11,6 +11,13 @@ function getReadManyInputQueryString (schema, variables={}) {
     inputPairs.push({
       key: 'sort',
       value: JSON.stringify(variables.sort).replace(/"([^(")"]+)":/g,"$1:")
+    })
+  }
+
+  if (searchStrategy) {
+    inputPairs.push({
+      key: 'search',
+      value: `"${variables.search}"`
     })
   }
 
