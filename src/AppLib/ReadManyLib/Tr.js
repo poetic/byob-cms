@@ -7,7 +7,7 @@ function Tr (props) {
     resource,
     cellFormatter,
     mutate,
-    fetchReadMany,
+    changeUrl,
     columnNames,
   } = props
 
@@ -21,7 +21,7 @@ function Tr (props) {
       await mutate({
         variables: uniqKeyQuery,
         update(store, { data }) {
-          fetchReadMany()
+          changeUrl()
         }
       })
       window.alert('Delete Success')

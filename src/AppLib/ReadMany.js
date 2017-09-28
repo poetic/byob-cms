@@ -1,4 +1,5 @@
 import React from 'react'
+import qs from 'qs'
 import { gql, graphql } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import jsonSchemaToGqlQuery from '../GqlCmsConfigLib/jsonSchemaToGqlQuery';
@@ -94,30 +95,34 @@ function ThField ({ columnName, readManySchema, sort, onSortChange }) {
 class ReadMany extends React.Component  {
   constructor(props) {
     super(props)
-    const limit = get(props, 'readManySchema.paginationStrategy.itemsPerPage', 10)
     this.state = {
       loading: true,
       items: [],
       total: 0,
-      skip: 0,
-      limit,
-      sort: [],
-      search: '',
     }
   }
   componentDidMount() {
-    this.fetchReadMany({ forceSkipTo: this.state.skip })
+    this.fetchReadMany()
   }
-  fetchReadMany(options={}) {
-    const { forceSkipTo } = options
+  changeUrl(paramsOverride) {
+    const { history, location, queryParams } = this.props
+    const { skip, limit, search, sort } = { ...queryParams, skip: 0, ...paramsOverride }
+    const queryParmasString = qs.stringify({
+      skip,
+      limit,
+      search,
+      sort,
+    })
+    history.push([location.pathname, queryParmasString].join('?'))
+  }
+  fetchReadMany() {
     const { readManySchema, resource, client } = this.props
     const { uniqKey, crudMapping } = resource;
     const fieldsQuery = jsonSchemaToGqlQuery(
       ensureUniqKey(readManySchema.jsonSchema, uniqKey)
     )
 
-    const { limit, sort, search } = this.state
-    const skip = forceSkipTo || 0
+    const { limit, sort, search, skip } = this.props.queryParams
 
     const ReadManyInputQueryString = getReadManyInputQueryString(
       readManySchema,
@@ -131,7 +136,6 @@ class ReadMany extends React.Component  {
     }
   }
   `;
-
     this.setState({ loading: true })
     client
       .query({ query: ReadManyQuery, fetchPolicy: 'network-only' })
@@ -141,7 +145,6 @@ class ReadMany extends React.Component  {
           loading: false,
           items,
           total,
-          skip,
         })
       })
       .catch((e) => {
@@ -152,11 +155,7 @@ class ReadMany extends React.Component  {
     const {
       loading,
       items,
-      limit,
       total,
-      skip,
-      sort,
-      search,
     } = this.state
 
     if (loading) {
@@ -164,6 +163,12 @@ class ReadMany extends React.Component  {
     }
 
     const {
+      queryParams: {
+        skip,
+        limit,
+        sort,
+        search,
+      },
       mutate,
       resource,
       readManySchema,
@@ -179,10 +184,7 @@ class ReadMany extends React.Component  {
         readManySchema={readManySchema}
         sort={sort}
         onSortChange={(nextSort) => {
-          this.setState(
-            { sort: nextSort },
-            () => this.fetchReadMany()
-          )
+          this.changeUrl({ sort: nextSort })
         }}
       />
     })
@@ -195,7 +197,7 @@ class ReadMany extends React.Component  {
       resource={resource}
       cellFormatter={cellFormatter}
       mutate={mutate}
-      fetchReadMany={() => this.fetchReadMany()}
+      changeUrl={(paramsOverride) => this.changeUrl(paramsOverride)}
       columnNames={columnNames}
     />)
 
@@ -212,10 +214,7 @@ class ReadMany extends React.Component  {
         readManySchema.searchStrategy
           ? <Search
             search={search}
-            onSearchChange={(nextSearch) => this.setState(
-              { search: nextSearch },
-              () => this.fetchReadMany()
-            )}
+            onSearchChange={(nextSearch) => this.changeUrl({search: nextSearch})}
           />
           : null
       }
@@ -236,10 +235,7 @@ class ReadMany extends React.Component  {
               limit={limit}
               total={total}
               skip={skip}
-              onSkipChange={(nextSkip) => this.setState(
-                { skip: nextSkip },
-                () => this.fetchReadMany({ forceSkipTo: nextSkip })
-              )}
+              onSkipChange={(nextSkip) => this.changeUrl({ skip: nextSkip })}
             />
             : null
         }
@@ -249,7 +245,11 @@ class ReadMany extends React.Component  {
 }
 
 function ReadManyWithData (props) {
-  const { config, resource } = props;
+  const {
+    config,
+    resource,
+    location,
+  } = props;
   const { uniqKey, crudMapping } = resource;
   const readManySchema = getCRUDSchemaFromResource({
     config,
@@ -268,8 +268,15 @@ function ReadManyWithData (props) {
     Component = graphql(DeleteQuery)(Component)
   }
 
+  const { search } = location
+  const limit = get(readManySchema, 'paginationStrategy.itemsPerPage', 10)
+  const defaultQueryParams = { limit, skip: 0, sort: [], search: '' }
+  const overrideQueryParams = search ? qs.parse(search.substring(1)) : {}
+  const queryParams = { ...defaultQueryParams, ...overrideQueryParams }
+
   return <Component
     {...props}
+    queryParams={queryParams}
     readManySchema={readManySchema}
   />
 }
