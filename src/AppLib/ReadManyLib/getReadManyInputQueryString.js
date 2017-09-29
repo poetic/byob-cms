@@ -21,6 +21,10 @@ function getReadManyInputQueryString (schema, variables={}) {
     })
   }
 
+  if (Object.keys(inputPairs).length === 0) {
+    return ''
+  }
+
   const string = inputPairs
     .map(({ key, value }) => {
       return [key, value].join(': ')
