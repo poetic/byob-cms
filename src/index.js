@@ -6,10 +6,12 @@ import './stylesheets/react-paginate.css';
 import './stylesheets/bootstrap-override.css';
 import App, { CodeLogin } from './App';
 
+const graphqlUrl = 'http://localhost:4000/admin-graphql'
+
 const GqlCmsConfig = {
   brand: 'Encouragement Solutions',
   Login: CodeLogin,
-  graphqlUrl: 'http://localhost:4000/admin-graphql',
+  graphqlUrl,
   readManySchema: {
     cellFormatter(value, object, fieldName) {
       if (value && typeof value === 'object') {
