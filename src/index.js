@@ -3,30 +3,19 @@ import ReactDOM from 'react-dom';
 import './stylesheets/react-selectize.css';
 import './stylesheets/react-jsonschemaform.css';
 import './stylesheets/react-paginate.css';
+import './stylesheets/bootstrap-override.css';
 import App, { CodeLogin } from './App';
 
-const config = {
-  graphqlUrl: 'http://localhost:4000/admin-graphql',
+const GqlCmsConfig = {
+  brand: 'Encouragement Solutions',
   Login: CodeLogin,
-  jsonSchemaFormExtensions: {
-    // widgets: {
-    //   testWidget: () => null
-    // }
-  },
+  graphqlUrl: 'http://localhost:4000/admin-graphql',
   readManySchema: {
-    // NOTE: this returns a string or react component
     cellFormatter(value, object, fieldName) {
-      return JSON.stringify(value)
-    },
-    paginationStrategy: {
-      type: 'STATIC',
-      itemsPerPage: 2,
-    },
-    sortStrategy: {
-      type: 'SINGLE'
-    },
-    searchStrategy: {
-      type: 'FULLTEXT'
+      if (value && typeof value === 'object') {
+        return <pre>{JSON.stringify(value)}</pre>
+      }
+      return value
     },
   },
   resources: [
@@ -41,19 +30,16 @@ const config = {
         update: 'updateLifeEventCategory',
         // delete: 'deleteLifeEventCategory',
       },
-      // readManySchema: {
-      //   jsonSchema: {
-      //     type: 'object',
-      //     properties: {
-      //       _id: {
-      //         type: 'string'
-      //       },
-      //       title: {
-      //         type: 'string'
-      //       },
-      //     }
-      //   }
-      // },
+      readManySchema: {
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string'
+            },
+          }
+        }
+      },
       defaultSchema: {
         jsonSchema: {
           title: 'Life Event',
@@ -80,6 +66,16 @@ const config = {
         readOne: 'lifeEvent',
         update: 'updateLifeEvent',
         // delete: 'deleteLifeEvent',
+      },
+      readManySchema: {
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string'
+            },
+          }
+        }
       },
       defaultSchema: {
         jsonSchema: {
@@ -174,6 +170,16 @@ const config = {
         update: 'updateDrop',
         // delete: 'deleteDrop',
       },
+      readManySchema: {
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string'
+            },
+          }
+        }
+      },
       defaultSchema: {
         jsonSchema: {
           title: 'Drop',
@@ -246,6 +252,26 @@ const config = {
         update: 'updateTag',
         // delete: 'deleteTag',
       },
+      readManySchema: {
+        sortStrategy: {
+          type: 'SINGLE'
+        },
+        searchStrategy: {
+          type: 'FULLTEXT'
+        },
+        paginationStrategy: {
+          type: 'STATIC',
+          itemsPerPage: 2,
+        },
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string'
+            },
+          }
+        }
+      },
       defaultSchema: {
         jsonSchema: {
           title: 'Tag',
@@ -280,15 +306,29 @@ const config = {
         update: 'updateTagQuestion',
         // delete: 'deleteTagQuestion',
       },
+      readManySchema: {
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string'
+            },
+          }
+        }
+      },
       defaultSchema: {
         jsonSchema: {
           title: 'Tag Question',
           type: 'object',
           required: [
             'title',
+            'question',
           ],
           properties: {
             title: {
+              type: 'string'
+            },
+            question: {
               type: 'string'
             },
           }
@@ -299,7 +339,8 @@ const config = {
   ]
 }
 
+
 ReactDOM.render(
-  <App config={config}/>,
+  <App config={GqlCmsConfig}/>,
   document.getElementById('root')
 );

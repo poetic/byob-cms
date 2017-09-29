@@ -56,11 +56,13 @@ class App extends Component {
 
     return (
       <div>
-        <NavBar/>
         <BrowserRouter>
-          <div className="container-fluid">
-            <IndexRoute config={config}/>
-            {resourceRouteElements}
+          <div>
+            <NavBar config={config}/>
+            <div className="container-fluid">
+              <IndexRoute config={config}/>
+              {resourceRouteElements}
+            </div>
           </div>
         </BrowserRouter>
       </div>

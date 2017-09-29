@@ -182,6 +182,8 @@ const config = {
 ```
 
 ## config API reference
+- brand  
+  The text on the left of the navbar
 - graphqlUrl  
   The backend graphql url used by byob-cms
 - resources

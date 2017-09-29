@@ -1,5 +1,7 @@
 import React from 'react'
 import { Route, Link } from 'react-router-dom';
+import { startCase } from 'lodash'
+import pluralize from 'pluralize'
 
 function IndexRoute (props) {
   const { config } = props
@@ -11,20 +13,24 @@ function IndexRoute (props) {
         .resources
         .reduce((acc, resource) => {
           if (resource.crudMapping.readMany) {
-            acc.push(<li key={resource.name}>
-              <Link to={`/${resource.name}`}>
-                {resource.name}
-              </Link>
-            </li>);
+            acc.push(<tr key={resource.name}>
+              <td>
+                <Link to={`/${resource.name}`}>
+                  {startCase(pluralize(resource.name))}
+                </Link>
+              </td>
+            </tr>);
           }
           return acc;
         }, [])
 
       return <div>
-        <h1>All Resources</h1>
-        <ul>
-          {resourceLinks}
-        </ul>
+        <h1>Site Administration</h1>
+        <table className="table table-striped">
+          <tbody>
+            {resourceLinks}
+          </tbody>
+        </table>
       </div>
     }}
   />

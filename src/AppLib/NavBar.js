@@ -1,12 +1,22 @@
 import React from 'react'
-import { connect } from 'react-redux';
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 import { setAccessToken } from '../StateHOF'
 
 function NavBar (props) {
-  const { accessToken, setAccessToken } = props
+  const { accessToken, setAccessToken, config } = props
+  const brand = config.brand || 'Admin CMS'
 
   return <nav className="navbar navbar-default">
     <div className="container-fluid">
+      <div className="navbar-header">
+        <Link
+          className="navbar-brand"
+          to="/"
+        >
+          {brand}
+        </Link>
+      </div>
       <ul className="nav navbar-nav navbar-right">
         <li>
           {

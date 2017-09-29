@@ -11,6 +11,8 @@ import Tr from './ReadManyLib/Tr'
 import { withApollo } from 'react-apollo'
 import ReactPaginate from 'react-paginate'
 import { get } from 'lodash'
+import { startCase } from 'lodash'
+import pluralize from 'pluralize'
 
 function Paginate ({ skip, limit, total, onSkipChange }) {
   const pageCount = Math.ceil(total / limit)
@@ -202,14 +204,20 @@ class ReadMany extends React.Component  {
     />)
 
     return <div>
-      <h1>{ resource.name } list</h1>
-      {
-        resource.crudMapping.create
-          ? <Link to={`/${resource.name}/new`}>
-            <button>create</button>
-          </Link>
-          : null
-      }
+      <h1>
+        List of { startCase(pluralize(resource.name)) }
+        {
+          resource.crudMapping.create
+            ? <Link
+              style={{float: 'right'}}
+              className="btn btn-primary btn-outline"
+              to={`/${resource.name}/new`}
+            >
+              CREATE
+            </Link>
+            : null
+        }
+      </h1>
       {
         readManySchema.searchStrategy
           ? <Search
@@ -219,7 +227,7 @@ class ReadMany extends React.Component  {
           : null
       }
       <div style={{ overflowX: 'scroll' }}>
-        <table className="table">
+        <table className="table table-striped">
           <thead>
             <tr>
               {thElements}
