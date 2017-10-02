@@ -2,97 +2,19 @@ import React from 'react'
 import qs from 'qs'
 import { gql, graphql } from 'react-apollo';
 import { Link } from 'react-router-dom';
+import { withApollo } from 'react-apollo'
+import { get } from 'lodash'
+import { startCase } from 'lodash'
+import pluralize from 'pluralize'
 import jsonSchemaToGqlQuery from '../GqlCmsConfigLib/jsonSchemaToGqlQuery';
 import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
 import ensureUniqKey from '../GqlCmsConfigLib/ensureUniqKey'
 import getReadManyInputQueryString from './ReadManyLib/getReadManyInputQueryString'
 import defaultCellFormatter from './ReadManyLib/defaultCellFormatter'
 import Tr from './ReadManyLib/Tr'
-import { withApollo } from 'react-apollo'
-import ReactPaginate from 'react-paginate'
-import { get } from 'lodash'
-import { startCase } from 'lodash'
-import pluralize from 'pluralize'
-
-function Paginate ({ skip, limit, total, onSkipChange }) {
-  const pageCount = Math.ceil(total / limit)
-  const forcePage = Math.ceil(skip / limit)
-  return <ReactPaginate
-    activeClassName="active"
-    containerClassName="react-paginate"
-    forcePage={forcePage}
-    onPageChange={({ selected }) => onSkipChange(limit * selected)}
-    pageCount={pageCount}
-    pageRangeDisplayed={5}
-    marginPagesDisplayed={3}
-  />
-}
-
-class Search extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      text: this.props.search
-    }
-  }
-  render() {
-    const { onSearchChange } = this.props
-    const { text } = this.state
-    return <div>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => this.setState({ text: e.target.value })}
-      />
-      <button onClick={() => onSearchChange(text)}>Search</button>
-    </div>
-  }
-}
-
-function ThFieldSort ({ columnName, readManySchema, sort, onSortChange }) {
-  if (!readManySchema.sortStrategy) {
-    return null
-  }
-
-  const { type } = readManySchema.sortStrategy
-
-  function changeSort (order) {
-    if (type === 'SINGLE') {
-      onSortChange([{
-        field: columnName,
-        order,
-      }])
-    } else {
-      throw new Error(`${type} is not supported.`)
-    }
-  }
-
-  const sortOrder = get(sort.find(({ field }) => field === columnName), 'order')
-  return <div>
-    {
-      sortOrder !== 'ASC'
-        ? <button onClick={() => changeSort('ASC')}>TO ASC</button>
-        : null
-    }
-    {
-      sortOrder !== 'DESC'
-        ? <button onClick={() => changeSort('DESC')}>TO DESC</button>
-        : null
-    }
-  </div>
-}
-
-function ThField ({ columnName, readManySchema, sort, onSortChange }) {
-  return <th>
-    {columnName}
-    <ThFieldSort
-      columnName={columnName}
-      readManySchema={readManySchema}
-      sort={sort}
-      onSortChange={onSortChange}
-    />
-  </th>
-}
+import Paginate from './ReadManyLib/Paginate'
+import Search from './ReadManyLib/Search'
+import ThField from './ReadManyLib/ThField'
 
 class ReadMany extends React.Component  {
   constructor(props) {
