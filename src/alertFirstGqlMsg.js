@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify'
+
 function alertFirstGqlMsg (e) {
   let message
   try {
@@ -6,7 +8,7 @@ function alertFirstGqlMsg (e) {
     message = e
   }
   console.log(e)
-  window.alert(message)
+  toast.error(message)
 }
 
 export default alertFirstGqlMsg

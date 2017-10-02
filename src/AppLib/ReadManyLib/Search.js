@@ -10,13 +10,23 @@ class Search extends React.Component {
   render() {
     const { onSearchChange } = this.props
     const { text } = this.state
-    return <div>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => this.setState({ text: e.target.value })}
-      />
-      <button onClick={() => onSearchChange(text)}>Search</button>
+    return <div style={{ maxWidth: "500px" }}>
+      <div className="input-group">
+        <input
+          className="form-control"
+          type="text"
+          value={text}
+          onChange={(e) => this.setState({ text: e.target.value })}
+        />
+        <span className="input-group-btn">
+          <button
+            className="btn btn-default"
+            type="button"
+            onClick={() => onSearchChange(text)}>
+            Search
+          </button>
+        </span>
+      </div>
     </div>
   }
 }

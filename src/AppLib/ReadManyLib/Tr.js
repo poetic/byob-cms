@@ -1,5 +1,6 @@
 import React from 'react'
 import TdAction from './TdAction'
+import { toast } from 'react-toastify'
 
 function Tr (props) {
   const {
@@ -18,15 +19,11 @@ function Tr (props) {
     }
     const uniqKeyQuery = { [resource.uniqKey]: row[resource.uniqKey] }
     try {
-      await mutate({
-        variables: uniqKeyQuery,
-        update(store, { data }) {
-          changeUrl()
-        }
-      })
-      window.alert('Delete Success')
+      await mutate({ variables: uniqKeyQuery })
+      changeUrl()
+      toast.success('Delete Success')
     } catch (e) {
-      window.alert(e)
+      toast.error(e)
     }
   }
 

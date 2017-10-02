@@ -3,15 +3,17 @@ import { gql, graphql } from 'react-apollo'
 import Form from './Form';
 import { upperFirst } from 'lodash';
 import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
+import { toast } from 'react-toastify'
 
 function Create (props) {
-  const { resource, mutate, config } = props;
+  const { resource, mutate, config, history } = props;
   const onSubmit = async ({ formData }) => {
     try {
       await mutate({ variables: { input: formData } })
-      window.alert('Create Success')
+      history.push(`/${resource.name}`)
+      toast.success('Create Success')
     } catch (e) {
-      window.alert(e)
+      toast.error(e)
     }
   }
   const createSchema = getCRUDSchemaFromResource({

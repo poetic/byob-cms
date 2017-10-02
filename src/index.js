@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './stylesheets/react-selectize.css';
 import './stylesheets/react-jsonschemaform.css';
-import './stylesheets/react-paginate.css';
 import './stylesheets/bootstrap-override.css';
+import './stylesheets/react-toastify.css';
 import App, { CodeLogin } from './App';
 
 const graphqlUrl = 'http://localhost:4000/admin-graphql'

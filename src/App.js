@@ -9,6 +9,7 @@ import Update from './AppLib/Update';
 import IndexRoute from './AppLib/IndexRoute';
 import NavBar from './AppLib/NavBar';
 import CodeLogin from './AppLib/LoginLib/CodeLogin'
+import { ToastContainer } from 'react-toastify';
 
 class App extends Component {
   render() {
@@ -58,6 +59,15 @@ class App extends Component {
       <div>
         <BrowserRouter>
           <div>
+            <ToastContainer
+              position="top-center"
+              type="default"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              pauseOnHover
+            />
             <NavBar config={config}/>
             <div className="container-fluid">
               <IndexRoute config={config}/>

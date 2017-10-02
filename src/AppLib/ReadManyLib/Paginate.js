@@ -6,7 +6,7 @@ function Paginate ({ skip, limit, total, onSkipChange }) {
   const forcePage = Math.ceil(skip / limit)
   return <ReactPaginate
     activeClassName="active"
-    containerClassName="react-paginate"
+    containerClassName="pagination"
     forcePage={forcePage}
     onPageChange={({ selected }) => onSkipChange(limit * selected)}
     pageCount={pageCount}

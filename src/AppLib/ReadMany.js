@@ -3,8 +3,7 @@ import qs from 'qs'
 import { gql, graphql } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import { withApollo } from 'react-apollo'
-import { get } from 'lodash'
-import { startCase } from 'lodash'
+import { get, startCase } from 'lodash'
 import pluralize from 'pluralize'
 import jsonSchemaToGqlQuery from '../GqlCmsConfigLib/jsonSchemaToGqlQuery';
 import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
@@ -135,7 +134,7 @@ class ReadMany extends React.Component  {
               className="btn btn-primary btn-outline"
               to={`/${resource.name}/new`}
             >
-              CREATE
+              Add New
             </Link>
             : null
         }

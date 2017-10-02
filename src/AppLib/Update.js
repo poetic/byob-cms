@@ -1,6 +1,6 @@
 import React from 'react'
 import { gql, graphql } from 'react-apollo'
-import { upperFirst } from 'lodash';
+import { startCase, upperFirst } from 'lodash';
 import graphqlWithoutCache from '../graphqlWithoutCache'
 import Form from './Form';
 import jsonSchemaToGqlQuery from '../GqlCmsConfigLib/jsonSchemaToGqlQuery'
@@ -8,9 +8,10 @@ import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResou
 import removeTypename from '../removeTypename'
 import nullToUndefined from '../formLib/nullToUndefined'
 import undefinedToNull from '../formLib/undefinedToNull'
+import { toast } from 'react-toastify'
 
 function Update (props) {
-  const { config, resource, mutate, data } = props;
+  const { config, resource, mutate, data, history } = props;
   const dirtyFormData = data[resource.crudMapping.readOne]
   const purifiedFormData = nullToUndefined(
     removeTypename(
@@ -24,9 +25,10 @@ function Update (props) {
     const input = undefinedToNull(formData)
     try {
       await mutate({ variables: { input } })
-      window.alert('Update Success')
+      history.push(`/${resource.name}`)
+      toast.success('Update Success')
     } catch (e) {
-      window.alert(e)
+      toast.error(e)
     }
   }
   const updateSchema = getCRUDSchemaFromResource({
@@ -35,7 +37,7 @@ function Update (props) {
     crudType: 'update'
   })
   return <div>
-    <h1>update {resource.name}</h1>
+    <h1>update {startCase(resource.name)}</h1>
     <Form
       jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
       schema={updateSchema.jsonSchema}
