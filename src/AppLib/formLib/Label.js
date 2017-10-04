@@ -1,4 +1,5 @@
 import React from 'react'
+import formatLabel from './formatLabel';
 
 const REQUIRED_FIELD_SYMBOL = "*";
 
@@ -8,11 +9,13 @@ function Label(props) {
     // See #312: Ensure compatibility with old versions of React.
     return <div />;
   }
+  const formattedLabel = formatLabel(label)
   return (
     <label className="control-label" htmlFor={id}>
-      {required ? label + REQUIRED_FIELD_SYMBOL : label}
+      {required ? formattedLabel + REQUIRED_FIELD_SYMBOL : formattedLabel}
     </label>
   );
 }
+
 
 export default Label;

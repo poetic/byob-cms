@@ -32,3 +32,18 @@
 .btn-danger.btn-outline:hover {
     color: #fff;
 }
+
+/* change columns structure of the first level fields */
+@media (min-width: 1200px) {
+  .rjsf {
+    width: 50%;
+  }
+  /* .rjsf > .form-group.field.field-object fieldset > .form-group { */
+  /*   width: 50%; */
+  /* } */
+}
+
+/* selectize */
+.rjsf .react-selectize.simple-select, .rjsf .react-selectize.multi-select {
+  width: 100%;
+}
