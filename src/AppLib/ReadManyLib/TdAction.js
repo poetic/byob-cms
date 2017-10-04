@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 
 function TdAction ({ resource, row, handleDelete }) {
-  return <td>
+  return <td style={{ textAlign: 'right' }}>
     {
       resource.crudMapping.update
         ? <Link

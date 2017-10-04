@@ -99,7 +99,9 @@ class ReadMany extends React.Component  {
 
     const columnNames = Object.keys(readManySchema.jsonSchema.properties)
 
-    const thActionsElement = <th key="actions">Actions</th>
+    const thActionsElement = <th style={{ textAlign: 'right' }} key="actions">
+      Actions
+    </th>
     const thFieldElements = columnNames.map((columnName) => {
       return <ThField
         key={columnName}
@@ -111,11 +113,11 @@ class ReadMany extends React.Component  {
         }}
       />
     })
-    const thElements = [thActionsElement].concat(thFieldElements)
+    const thElements = thFieldElements.concat(thActionsElement)
 
     const cellFormatter = readManySchema.cellFormatter || defaultCellFormatter
-    const trElements = items.map((row) => <Tr
-      key={row[resource.uniqKey]}
+    const trElements = items.map((row, index) => <Tr
+      key={index}
       row={row}
       resource={resource}
       cellFormatter={cellFormatter}

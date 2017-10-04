@@ -37,7 +37,7 @@ function Update (props) {
     crudType: 'update'
   })
   return <div>
-    <h1>update {startCase(resource.name)}</h1>
+    <h1>Update {startCase(resource.name)}</h1>
     <Form
       jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
       schema={updateSchema.jsonSchema}

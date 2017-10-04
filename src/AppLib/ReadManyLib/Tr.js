@@ -34,13 +34,13 @@ function Tr (props) {
   })
 
   return <tr>
+    {tdFieldElements}
     <TdAction
       key="actions"
       resource={resource}
       row={row}
       handleDelete={handleDelete}
     />
-    {tdFieldElements}
   </tr>
 }
 
