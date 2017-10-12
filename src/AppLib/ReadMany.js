@@ -27,7 +27,10 @@ class ReadMany extends React.Component  {
     }
   }
   componentDidMount() {
-    this.fetchReadMany()
+    this.fetchReadMany(this.props)
+  }
+  componentWillReceiveProps(nextProps) {
+    this.fetchReadMany(nextProps)
   }
   changeUrl(paramsOverride) {
     const { history, location, queryParams } = this.props
@@ -40,14 +43,14 @@ class ReadMany extends React.Component  {
     })
     history.push([location.pathname, queryParmasString].join('?'))
   }
-  fetchReadMany() {
-    const { readManySchema, resource, client } = this.props
+  fetchReadMany(props) {
+    const { readManySchema, resource, client } = props
     const { uniqKey, crudMapping } = resource;
     const fieldsQuery = jsonSchemaToGqlQuery(
       ensureUniqKey(readManySchema.jsonSchema, uniqKey)
     )
 
-    const { limit, sort, search, skip } = this.props.queryParams
+    const { limit, sort, search, skip } = props.queryParams
 
     const ReadManyInputQueryString = getReadManyInputQueryString(
       readManySchema,
@@ -82,10 +85,6 @@ class ReadMany extends React.Component  {
       items,
       total,
     } = this.state
-
-    if (loading) {
-      return null
-    }
 
     const {
       queryParams: {
@@ -177,6 +176,8 @@ class ReadMany extends React.Component  {
   }
 }
 
+const ReadManyWithApollo = withApollo(ReadMany);
+
 function ReadManyWithData (props) {
   const {
     config,
@@ -190,7 +191,7 @@ function ReadManyWithData (props) {
     crudType: 'readMany',
   })
 
-  let Component = withApollo(ReadMany)
+  let Component = ReadManyWithApollo
 
   if (crudMapping.delete) {
     const DeleteQuery = gql`
