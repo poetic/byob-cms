@@ -20,6 +20,7 @@ const DEFAULT_ITEMS_PER_PAGE = 15
 class ReadMany extends React.Component  {
   constructor(props) {
     super(props)
+    // NOTE: loading is not used in render, we may need it later on
     this.state = {
       loading: true,
       items: [],
@@ -81,7 +82,6 @@ class ReadMany extends React.Component  {
   }
   render() {
     const {
-      loading,
       items,
       total,
     } = this.state
