@@ -1,5 +1,6 @@
 import React from 'react'
 import { gql, graphql } from 'react-apollo'
+import { startCase } from 'lodash';
 import Form from './Form';
 import { upperFirst } from 'lodash';
 import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
@@ -16,19 +17,23 @@ function Create (props) {
       toast.error(e)
     }
   }
+  const onCancel = () => {
+    history.push(`/${resource.name}`)
+  }
   const createSchema = getCRUDSchemaFromResource({
     config,
     resource,
     crudType: 'create'
   })
   return <div>
-    <h1>create {resource.name}</h1>
+    <h1>Create {startCase(resource.name)}</h1>
     <Form
       jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
       schema={createSchema.jsonSchema}
       uiSchema={createSchema.uiSchema}
       noHtml5Validate
       onSubmit={onSubmit}
+      onCancel={onCancel}
     />
   </div>
 }

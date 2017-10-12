@@ -27,7 +27,16 @@ function ExtendedForm (props) {
     widgets={{...defaultWidgets, ...widgets}}
     fields={{...defaultFields, ...fields}}
     {...props}
-  />
+  >
+    <div>
+      <button type="button" className="btn btn-danger" onClick={props.onCancel}>
+        Cancel
+      </button>
+      <button type="submit" className="btn btn-primary" style={{ float: 'right' }}>
+        Submit
+      </button>
+    </div>
+  </Form>
 }
 
 export default ExtendedForm;

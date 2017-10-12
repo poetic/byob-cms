@@ -88,8 +88,8 @@ const GqlCmsConfig = {
             'subTitle',
             'imageUrl',
             'phases',
-            'toSays',
             'notToSays',
+            'toSays',
             'durationInDays',
             'lifeEventCategoryId',
             'dropIds'
@@ -123,14 +123,16 @@ const GqlCmsConfig = {
                 }
               }
             },
-            toSays: {
+            notToSays: {
+              title: 'Things not to say',
               type: 'array',
               default: [],
               items: {
                 type: 'string'
               }
             },
-            notToSays: {
+            toSays: {
+              title: 'What to say instead',
               type: 'array',
               default: [],
               items: {
@@ -263,7 +265,7 @@ const GqlCmsConfig = {
         },
         paginationStrategy: {
           type: 'STATIC',
-          itemsPerPage: 2,
+          itemsPerPage: 15,
         },
         jsonSchema: {
           type: 'object',
@@ -340,6 +342,7 @@ const GqlCmsConfig = {
     },
   ]
 }
+
 
 
 ReactDOM.render(

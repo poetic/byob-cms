@@ -10,7 +10,18 @@ class Search extends React.Component {
   render() {
     const { onSearchChange } = this.props
     const { text } = this.state
-    return <div style={{ maxWidth: "500px" }}>
+    function onSubmit (e) {
+      e.preventDefault();
+      onSearchChange(text)
+    }
+    const style = {
+      maxWidth: "500px",
+      margin: "30px 0",
+    }
+    return <form
+      onSubmit={onSubmit}
+      style={style}
+    >
       <div className="input-group">
         <input
           className="form-control"
@@ -21,13 +32,12 @@ class Search extends React.Component {
         <span className="input-group-btn">
           <button
             className="btn btn-default"
-            type="button"
-            onClick={() => onSearchChange(text)}>
+            type="submit">
             Search
           </button>
         </span>
       </div>
-    </div>
+    </form>
   }
 }
 

@@ -31,6 +31,9 @@ function Update (props) {
       toast.error(e)
     }
   }
+  const onCancel = () => {
+    history.push(`/${resource.name}`)
+  }
   const updateSchema = getCRUDSchemaFromResource({
     config,
     resource,
@@ -45,6 +48,7 @@ function Update (props) {
       formData={purifiedFormData}
       noHtml5Validate
       onSubmit={onSubmit}
+      onCancel={onCancel}
     />
   </div>
 }

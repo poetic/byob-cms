@@ -15,6 +15,8 @@ import Paginate from './ReadManyLib/Paginate'
 import Search from './ReadManyLib/Search'
 import ThField from './ReadManyLib/ThField'
 
+const DEFAULT_ITEMS_PER_PAGE = 15
+
 class ReadMany extends React.Component  {
   constructor(props) {
     super(props)
@@ -200,7 +202,11 @@ function ReadManyWithData (props) {
   }
 
   const { search } = location
-  const limit = get(readManySchema, 'paginationStrategy.itemsPerPage', 10)
+  const limit = get(
+    readManySchema,
+    'paginationStrategy.itemsPerPage',
+    DEFAULT_ITEMS_PER_PAGE
+  )
   const defaultQueryParams = { limit, skip: 0, sort: [], search: '' }
   const overrideQueryParams = search ? qs.parse(search.substring(1)) : {}
   const queryParams = { ...defaultQueryParams, ...overrideQueryParams }
