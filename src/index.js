@@ -87,7 +87,7 @@ const GqlCmsConfig = {
             'title',
             'subTitle',
             'imageUrl',
-            'phases',
+            'durationDescription',
             'notToSays',
             'toSays',
             'durationInDays',
@@ -104,24 +104,8 @@ const GqlCmsConfig = {
             imageUrl: {
               type: 'string'
             },
-            phases: {
-              type: 'array',
-              default: [],
-              items: {
-                type: 'object',
-                properties: {
-                  title: {
-                    type: 'string'
-                  },
-                  items: {
-                    type: 'array',
-                    default: [],
-                    items: {
-                      type: 'string'
-                    }
-                  }
-                }
-              }
+            durationDescription: {
+              type: 'string'
             },
             notToSays: {
               title: 'Things not to say',
@@ -342,8 +326,6 @@ const GqlCmsConfig = {
     },
   ]
 }
-
-
 
 ReactDOM.render(
   <App config={GqlCmsConfig}/>,
