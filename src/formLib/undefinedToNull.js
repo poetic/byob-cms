@@ -2,7 +2,8 @@ function undefinedToNull (data) {
   if (data === undefined) {
     return null
   } else if (Array.isArray(data)) {
-    return data.map(undefinedToNull)
+    // remove null in array
+    return data.filter((value) => value != null)
   } else if (typeof data === 'object') {
     return Object.keys(data).reduce((acc, key) => {
       return {
