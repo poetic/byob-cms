@@ -9,6 +9,7 @@ import removeTypename from '../removeTypename'
 import nullToUndefined from '../formLib/nullToUndefined'
 import undefinedToNull from '../formLib/undefinedToNull'
 import { toast } from 'react-toastify'
+import alertFirstGqlMsg from '../alertFirstGqlMsg'
 
 function Update (props) {
   const { config, resource, mutate, data, history } = props;
@@ -28,7 +29,7 @@ function Update (props) {
       history.push(`/${resource.name}`)
       toast.success('Update Success')
     } catch (e) {
-      toast.error(e)
+      alertFirstGqlMsg(e)
     }
   }
   const onCancel = () => {

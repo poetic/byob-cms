@@ -5,6 +5,7 @@ import Form from './Form';
 import { upperFirst } from 'lodash';
 import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
 import { toast } from 'react-toastify'
+import alertFirstGqlMsg from '../alertFirstGqlMsg'
 
 function Create (props) {
   const { resource, mutate, config, history } = props;
@@ -14,7 +15,7 @@ function Create (props) {
       history.push(`/${resource.name}`)
       toast.success('Create Success')
     } catch (e) {
-      toast.error(e)
+      alertFirstGqlMsg(e)
     }
   }
   const onCancel = () => {
