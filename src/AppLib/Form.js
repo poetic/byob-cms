@@ -6,6 +6,29 @@ import FieldTemplate from './formLib/FieldTemplate'
 // NOTE: TitleField is used for ArrayField
 import TitleField from './formLib/TitleField'
 
+function FormButtons (props) {
+  const { onCancel, readOnly } = props
+  if (readOnly) {
+    return <div>
+      <button type="button" className="btn btn-primary" onClick={onCancel}>
+        Back
+      </button>
+      <button type="submit" style={{ display: 'none' }}>
+        Submit
+      </button>
+    </div>
+  } else {
+    return <div>
+      <button type="button" className="btn btn-danger" onClick={onCancel}>
+        Cancel
+      </button>
+      <button type="submit" className="btn btn-primary" style={{ float: 'right' }}>
+        Submit
+      </button>
+    </div>
+  }
+}
+
 const defaultWidgets = {
   hasOneWidget: HasOneWidget,
 }
@@ -28,14 +51,10 @@ function ExtendedForm (props) {
     fields={{...defaultFields, ...fields}}
     {...props}
   >
-    <div>
-      <button type="button" className="btn btn-danger" onClick={props.onCancel}>
-        Cancel
-      </button>
-      <button type="submit" className="btn btn-primary" style={{ float: 'right' }}>
-        Submit
-      </button>
-    </div>
+    <FormButtons
+      onCancel={props.onCancel}
+      readOnly={props.readOnly}
+    />
   </Form>
 }
 

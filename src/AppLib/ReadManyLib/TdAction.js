@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { get } from 'lodash'
 
 function TdAction ({ resource, row, handleDelete }) {
   return <td style={{ textAlign: 'right' }}>
@@ -19,8 +20,18 @@ function TdAction ({ resource, row, handleDelete }) {
           className="btn btn-sm btn-danger"
           onClick={handleDelete}
         >
-          delete
+          Delete
         </button>
+        : null
+    }
+    {
+      (resource.crudMapping.readOne && get(resource, 'readOneSchema.show'))
+        ? <Link
+          className="btn btn-sm btn-info"
+          to={`/${resource.name}/${row[resource.uniqKey]}`}
+        >
+          View
+        </Link>
         : null
     }
   </td>

@@ -20,6 +20,15 @@ const GqlCmsConfig = {
       }
       return value
     },
+    sortStrategy: {
+      type: 'SINGLE'
+    },
+    searchStrategy: {
+      type: 'FULLTEXT'
+    },
+    paginationStrategy: {
+      type: 'STATIC',
+    },
   },
   resources: [
     {
@@ -91,7 +100,6 @@ const GqlCmsConfig = {
             'durationDescription',
             'notToSays',
             'toSays',
-            'durationInDays',
             'lifeEventCategoryId',
             'dropIds'
           ],
@@ -123,9 +131,6 @@ const GqlCmsConfig = {
               items: {
                 type: 'string'
               }
-            },
-            durationInDays: {
-              type: 'integer',
             },
             lifeEventCategoryId: {
               type: 'string',
@@ -232,6 +237,51 @@ const GqlCmsConfig = {
       }
     },
     {
+      name: 'customDrop',
+      uniqKey: '_id',
+      crudMapping: {
+        // create: 'createDrop',
+        readMany: 'customDrops',
+        readOne: 'customDrop',
+        // update: 'updateDrop',
+        // delete: 'deleteDrop',
+      },
+      readOneSchema: {
+        show: true
+      },
+      readManySchema: {
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string'
+            },
+            content: {
+              type: 'string',
+            },
+          }
+        }
+      },
+      defaultSchema: {
+        jsonSchema: {
+          title: 'Custom Drop',
+          type: 'object',
+          required: [
+            'title',
+            'content',
+          ],
+          properties: {
+            title: {
+              type: 'string',
+            },
+            content: {
+              type: 'string',
+            },
+          },
+        },
+      }
+    },
+    {
       name: 'tag',
       uniqKey: '_id',
       crudMapping: {
@@ -242,16 +292,6 @@ const GqlCmsConfig = {
         // delete: 'deleteTag',
       },
       readManySchema: {
-        sortStrategy: {
-          type: 'SINGLE'
-        },
-        searchStrategy: {
-          type: 'FULLTEXT'
-        },
-        paginationStrategy: {
-          type: 'STATIC',
-          itemsPerPage: 15,
-        },
         jsonSchema: {
           type: 'object',
           properties: {
@@ -267,7 +307,6 @@ const GqlCmsConfig = {
           type: 'object',
           required: [
             'title',
-            'tagQuestionId',
           ],
           properties: {
             title: {

@@ -1,45 +1,40 @@
 import React from 'react'
-import { gql, graphql } from 'react-apollo'
+import { gql } from 'react-apollo'
 import Form from './Form';
 import jsonSchemaToGqlQuery from '../GqlCmsConfigLib/jsonSchemaToGqlQuery'
 import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
 import removeTypename from '../removeTypename'
+import graphqlWithoutCache from '../graphqlWithoutCache'
 
-class ReadOne extends React.Component {
-  componentDidMount() {
-    const { loading, refetch } = this.props.data
-    if (!loading) {
-      refetch()
-    }
+function ReadOne(props) {
+  const { config, resource, data, history } = props;
+  const purifiedFormData = removeTypename(data[resource.crudMapping.readOne])
+  if (data.loading) {
+    return null;
   }
-  render() {
-    const { config, resource, data } = this.props;
-    const purifiedFormData = removeTypename(data[resource.crudMapping.readOne])
-    if (data.loading) {
-      return null;
-    }
-    const readOneSchema = getCRUDSchemaFromResource({
-      config,
-      resource,
-      crudType: 'readOne'
-    })
-    const uiSchema = {
-      'ui:disabled': true,
-      ...readOneSchema.uiSchema
-    }
-    return <div>
-      <Form
-        jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
-        schema={readOneSchema.jsonSchema}
-        uiSchema={uiSchema}
-        formData={purifiedFormData}
-        noHtml5Validate
-        onSubmit={() => {}}
-      >
-        <button type="submit" style={{ display: 'none' }}>Submit</button>
-      </Form>
-    </div>
+  const onCancel = () => {
+    history.push(`/${resource.name}`)
   }
+  const readOneSchema = getCRUDSchemaFromResource({
+    config,
+    resource,
+    crudType: 'readOne'
+  })
+  const uiSchema = {
+    'ui:disabled': true,
+    ...readOneSchema.uiSchema
+  }
+  return <div>
+    <Form
+      jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
+      schema={readOneSchema.jsonSchema}
+      uiSchema={uiSchema}
+      formData={purifiedFormData}
+      onCancel={onCancel}
+      noHtml5Validate
+      readOnly
+    />
+  </div>
 }
 
 function ReadOneWithData (props) {
@@ -59,7 +54,7 @@ function ReadOneWithData (props) {
   }
   `
   const uniqKeyValue = props.match.params[uniqKey]
-  Component = graphql(
+  Component = graphqlWithoutCache(
     ReadOneQuery,
     { options: { variables: { [uniqKey]: uniqKeyValue } } }
   )(Component)
