@@ -5,7 +5,7 @@ import { setAccessToken } from '../StateHOF'
 
 function NavBar (props) {
   const { accessToken, setAccessToken, config } = props
-  const brand = config.brand || 'Admin CMS'
+  const brand = config.brand || 'CMS'
 
   return <nav className="navbar navbar-default">
     <div className="container-fluid">

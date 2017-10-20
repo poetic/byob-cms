@@ -12,6 +12,9 @@ import CodeLogin from './AppLib/LoginLib/CodeLogin'
 import { ToastContainer } from 'react-toastify';
 
 class App extends Component {
+  componentDidMount() {
+    document.title = this.props.config.title || 'CMS'
+  }
   render() {
     const { config } = this.props
     const resourceRouteElements = config

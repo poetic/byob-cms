@@ -9,7 +9,8 @@ import App, { CodeLogin } from './App';
 const graphqlUrl = 'http://localhost:4000/admin-graphql'
 
 const GqlCmsConfig = {
-  brand: 'Encouragement Solutions',
+  brand: 'Encouragement CMS',
+  title: 'Encouragement CMS',
   Login: CodeLogin,
   graphqlUrl,
   readManySchema: {
