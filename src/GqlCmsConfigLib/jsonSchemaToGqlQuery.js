@@ -4,6 +4,7 @@ function jsonSchemaToGqlQuery (jsonSchema) {
     case 'string':
     case 'number':
     case 'integer':
+    case 'boolean':
       return '';
     case 'object':
       const fields = Object
