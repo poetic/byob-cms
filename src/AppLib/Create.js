@@ -6,12 +6,14 @@ import { upperFirst } from 'lodash';
 import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
 import { toast } from 'react-toastify'
 import alertFirstGqlMsg from '../alertFirstGqlMsg'
+import undefinedToNull from '../formLib/undefinedToNull'
 
 function Create (props) {
   const { resource, mutate, config, history } = props;
   const onSubmit = async ({ formData }) => {
+    const input = undefinedToNull(formData)
     try {
-      await mutate({ variables: { input: formData } })
+      await mutate({ variables: { input } })
       history.push(`/${resource.name}`)
       toast.success('Create Success')
     } catch (e) {
