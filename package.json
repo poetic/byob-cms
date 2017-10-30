@@ -1,6 +1,6 @@
 {
   "name": "byob-cms",
-  "version": "1.10.12",
+  "version": "1.10.13",
   "description": "Bring your own backend! A client side only cms that speaks graphQL.",
   "main": "index.js",
   "dependencies": {

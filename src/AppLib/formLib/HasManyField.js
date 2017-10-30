@@ -3,6 +3,7 @@ import { MultiSelect } from 'react-selectize'
 import Label from './Label'
 import renderValue from './renderValue'
 import withOptionItems from './withOptionItems'
+import { sortBy } from 'lodash'
 
 class MultiSelectWidget extends React.Component {
   render() {
@@ -37,7 +38,7 @@ class MultiSelectWidget extends React.Component {
       <MultiSelect
         disabled={disabled || readonly}
         values={valueItems}
-        options={optionItems}
+        options={sortBy(optionItems, ({ label }) => label.toUpperCase())}
         onValuesChange={v => {
           onChange(v.map(v => v.value))
         }}
