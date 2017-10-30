@@ -1,6 +1,7 @@
 import React from 'react'
 import { SimpleSelect } from 'react-selectize'
 import withOptionItems from './withOptionItems'
+import { sortBy } from 'lodash'
 
 function SimpleSelectWidget (props) {
   const { optionItems } = props
@@ -8,7 +9,7 @@ function SimpleSelectWidget (props) {
 
   return <SimpleSelect
     disabled={props.disabled || props.readonly}
-    options={optionItems}
+    options={sortBy(optionItems, ({ label }) => label.toUpperCase())}
     value={valueItem}
     onValueChange={v => props.onChange(v && v.value)}
   />
