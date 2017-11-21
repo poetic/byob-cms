@@ -8,10 +8,21 @@ function getReadManyInputQueryString (schema, variables={}) {
 
   if (sortStrategy) {
     // note: the replace is used to remove quotes from properties
+    const sortValue = [].concat(variables.sort)
+    const shouldAddDefaultSort = sortStrategy.type === 'SINGLE'
+      && sortValue.length === 0
+      && sortStrategy.defaultSortField
+    if (shouldAddDefaultSort) {
+      sortValue.push({
+        field: sortStrategy.defaultSortField,
+        order: 'ASC',
+      })
+    }
     inputPairs.push({
       key: 'sort',
-      value: JSON.stringify(variables.sort).replace(/"([^(")"]+)":/g,"$1:")
+      value: JSON.stringify(sortValue).replace(/"([^(")"]+)":/g,"$1:"),
     })
+    console.log('inputPairs: ', inputPairs)
   }
 
   if (searchStrategy) {

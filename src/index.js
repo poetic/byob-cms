@@ -21,7 +21,8 @@ const GqlCmsConfig = {
       return value
     },
     sortStrategy: {
-      type: 'SINGLE'
+      type: 'SINGLE',
+      defaultSortField: 'title',
     },
     searchStrategy: {
       type: 'FULLTEXT'
