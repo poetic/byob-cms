@@ -71,6 +71,7 @@ function ThFieldSort ({ columnName, readManySchema, sort, onSortChange }) {
   const sortOrder = get(sort.find(({ field }) => field === columnName), 'order')
   const style = {
     float: 'right',
+    cursor: 'pointer',
   }
   return <span style={style}>
     <SortButton changeSort={changeSort} sortOrder={sortOrder}/>
