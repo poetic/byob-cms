@@ -22,7 +22,6 @@ function getReadManyInputQueryString (schema, variables={}) {
       key: 'sort',
       value: JSON.stringify(sortValue).replace(/"([^(")"]+)":/g,"$1:"),
     })
-    console.log('inputPairs: ', inputPairs)
   }
 
   if (searchStrategy) {
