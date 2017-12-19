@@ -8,7 +8,8 @@ import ReadMany from './AppLib/ReadMany';
 import Update from './AppLib/Update';
 import IndexRoute from './AppLib/IndexRoute';
 import NavBar from './AppLib/NavBar';
-import CodeLogin from './AppLib/LoginLib/CodeLogin'
+import CodeLogin from './AppLib/LoginLib/CodeLogin';
+import withOptionItems from './AppLib/formLib/withOptionItems';
 import { ToastContainer } from 'react-toastify';
 
 class App extends Component {
@@ -114,4 +115,5 @@ function AppWithGuard (props) {
 export default StateHOF(AppWithGuard);
 export {
   CodeLogin,
+  withOptionItems,
 }
