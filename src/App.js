@@ -10,6 +10,7 @@ import IndexRoute from './AppLib/IndexRoute';
 import NavBar from './AppLib/NavBar';
 import CodeLogin from './AppLib/LoginLib/CodeLogin';
 import withOptionItems from './AppLib/formLib/withOptionItems';
+import Label from './AppLib/formLib/Label'
 import { ToastContainer } from 'react-toastify';
 
 class App extends Component {
@@ -116,4 +117,5 @@ export default StateHOF(AppWithGuard);
 export {
   CodeLogin,
   withOptionItems,
+  Label,
 }
