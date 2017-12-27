@@ -4,14 +4,17 @@ import './stylesheets/react-selectize.css';
 import './stylesheets/react-jsonschemaform.css';
 import './stylesheets/bootstrap-override.css';
 import './stylesheets/react-toastify.css';
-import App, { CodeLogin } from './App';
+import Cms, { EmailPasswordLogin, StateHOF } from './App';
+import { connect } from 'react-redux';
+import jwtDecode from 'jwt-decode';
+import { ToastContainer } from 'react-toastify'
 
 const graphqlUrl = 'http://localhost:4000/admin-graphql'
 
-const GqlCmsConfig = {
+const AdminGqlCmsConfig = {
   brand: 'Encouragement CMS',
   title: 'Encouragement CMS',
-  Login: CodeLogin,
+  Login: EmailPasswordLogin,
   graphqlUrl,
   readManySchema: {
     cellFormatter(value, object, fieldName) {
@@ -368,7 +371,150 @@ const GqlCmsConfig = {
   ]
 }
 
-ReactDOM.render(
-  <App config={GqlCmsConfig}/>,
-  document.getElementById('root')
-);
+const ContentEditorGqlCmsConfig = {
+  brand: 'Encouragement CMS',
+  title: 'Encouragement CMS',
+  Login: EmailPasswordLogin,
+  initialPath: 'lifeEvent',
+  graphqlUrl,
+  readManySchema: {
+    cellFormatter(value, object, fieldName) {
+      if (value && typeof value === 'object') {
+        return <pre>{JSON.stringify(value)}</pre>
+      }
+      return value
+    },
+    sortStrategy: {
+      type: 'SINGLE',
+      defaultSortField: 'title',
+    },
+    searchStrategy: {
+      type: 'FULLTEXT'
+    },
+    paginationStrategy: {
+      type: 'STATIC',
+    },
+  },
+  resources: [
+    {
+      // NOTE: name is singular
+      name: 'lifeEvent',
+      uniqKey: '_id',
+      crudMapping: {
+        create: 'createLifeEvent',
+        readMany: 'lifeEvents',
+        readOne: 'lifeEvent',
+        update: 'updateLifeEvent',
+        // delete: 'deleteLifeEvent',
+      },
+      readManySchema: {
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string'
+            },
+          }
+        }
+      },
+      defaultSchema: {
+        jsonSchema: {
+          title: 'Life Event',
+          type: 'object',
+          required: [
+            'title',
+            'subTitle',
+            'imageUrl',
+            'durationDescription',
+            'notToSays',
+            'toSays',
+            'lifeEventCategoryId',
+            'dropIds'
+          ],
+          properties: {
+            title: {
+              type: 'string'
+            },
+            subTitle: {
+              type: 'string'
+            },
+            imageUrl: {
+              type: 'string'
+            },
+            durationDescription: {
+              type: 'string'
+            },
+            notToSays: {
+              title: 'Things not to say',
+              type: 'array',
+              default: [],
+              items: {
+                type: 'string'
+              }
+            },
+            toSays: {
+              title: 'What to say instead',
+              type: 'array',
+              default: [],
+              items: {
+                type: 'string'
+              }
+            },
+            lifeEventCategoryId: {
+              type: 'string',
+            },
+            dropIds: {
+              type: 'array',
+              default: [],
+              items: {
+                type: 'string'
+              }
+            },
+          }
+        },
+        uiSchema: {
+          lifeEventCategoryId: {
+            'ui:widget': 'hasOneWidget',
+          },
+          dropIds: {
+            'ui:field': 'hasManyField'
+          }
+        },
+      },
+    },
+  ]
+}
+
+function RoleRouter (props) {
+  const { accessToken } = props
+  if (!accessToken) {
+    return <div>
+      <ToastContainer
+        position="top-center"
+        type="default"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+      />
+      <EmailPasswordLogin/>
+    </div>
+  }
+  const { role } = jwtDecode(accessToken)
+  switch (role) {
+    case 'ADMIN':
+      return <Cms config={AdminGqlCmsConfig}/>
+    case 'CONTENT_EDITOR':
+      return <Cms config={ContentEditorGqlCmsConfig}/>
+    default:
+      return null
+  }
+}
+
+const RoleRouterWithState = StateHOF(connect(
+  (state) => ({ accessToken: state.accessToken }),
+  {}
+)(RoleRouter))
+
+ReactDOM.render(<RoleRouterWithState config={AdminGqlCmsConfig}/>, document.getElementById('root'));

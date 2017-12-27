@@ -1,10 +1,14 @@
 import React from 'react'
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Redirect } from 'react-router-dom';
 import { startCase } from 'lodash'
 import pluralize from 'pluralize'
 
 function IndexRoute (props) {
-  const { config } = props
+  const { config, history } = props
+  if (history.location.pathname === '/' && config.initialPath) {
+    return <Redirect to={config.initialPath} />
+  }
+
   const indexRouteElement = <Route
     exact
     path='/'

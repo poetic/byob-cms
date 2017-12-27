@@ -14,7 +14,8 @@ class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      code: ''
+      email: '',
+      password: '',
     }
   }
 
@@ -25,7 +26,8 @@ class Login extends React.Component {
         const response = await this.props.mutate({
           variables: {
             loginInput: {
-              code: this.state.code
+              email: this.state.email,
+              password: this.state.password,
             }
           }
         })
@@ -40,18 +42,30 @@ class Login extends React.Component {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+    }
+    const buttonStyle = {
+      width: '100%',
     }
 
     return <div style={containerStyle}>
       <h1>Login</h1>
       <form onSubmit={onSubmit}>
         <input
-          type="password"
-          value={this.state.code}
-          onChange={e => this.setState({ code: e.target.value })}
+          placeholder="email"
+          type="email"
+          value={this.state.email}
+          onChange={e => this.setState({ email: e.target.value })}
         />
-        <button type="submit">Login</button>
+        <br/>
+        <input
+          placeholder="password"
+          type="password"
+          value={this.state.password}
+          onChange={e => this.setState({ password: e.target.value })}
+        />
+        <br/>
+        <button type="submit" style={buttonStyle}>Login</button>
       </form>
     </div>
   }

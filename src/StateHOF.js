@@ -86,7 +86,7 @@ function createProvider ({ config: { graphqlUrl } }) {
 
 const createProviderOnce = once(createProvider)
 
-export default function StoreHOF (Component) {
+export default function StateHOF (Component) {
   return (props) => {
     const Provider = createProviderOnce(props)
     return <Provider>

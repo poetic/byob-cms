@@ -9,6 +9,7 @@ import Update from './AppLib/Update';
 import IndexRoute from './AppLib/IndexRoute';
 import NavBar from './AppLib/NavBar';
 import CodeLogin from './AppLib/LoginLib/CodeLogin';
+import EmailPasswordLogin from './AppLib/LoginLib/EmailPasswordLogin';
 import withOptionItems from './AppLib/formLib/withOptionItems';
 import Label from './AppLib/formLib/Label'
 import { ToastContainer } from 'react-toastify';
@@ -75,7 +76,7 @@ class App extends Component {
             />
             <NavBar config={config}/>
             <div className="container-fluid">
-              <IndexRoute config={config}/>
+              <Route render={(props) => <IndexRoute {...props} config={config}/>} />
               {resourceRouteElements}
             </div>
           </div>
@@ -99,9 +100,7 @@ function AppWithGuard (props) {
     if (props.accessToken) {
       return <App {...props}/>
     } else {
-      return Login
-        ? <Login setAccessToken={props.setAccessToken}/>
-        : null
+      return Login ? <Login/> : null
     }
   }
 
@@ -116,6 +115,9 @@ function AppWithGuard (props) {
 export default StateHOF(AppWithGuard);
 export {
   CodeLogin,
+  EmailPasswordLogin,
   withOptionItems,
   Label,
+  setAccessToken,
+  StateHOF,
 }
