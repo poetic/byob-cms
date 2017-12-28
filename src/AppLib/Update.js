@@ -77,7 +77,7 @@ function UpdateWithData (props) {
   )(Component)
 
   const UpdateQuery = gql`
-  mutation ${crudMapping.update}($input: ${upperFirst(resource.name + 'Input')}!) {
+  mutation ${crudMapping.update}($input: ${upperFirst(updateSchema.inputName || resource.name + 'Input')}!) {
     ${crudMapping.update}(${resource.name} : $input, ${uniqKey}: "${uniqKeyValue}")
   }
   `;
