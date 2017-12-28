@@ -7,6 +7,11 @@ function NavBar (props) {
   const { accessToken, setAccessToken, config } = props
   const brand = config.brand || 'CMS'
 
+  function handleClick () {
+    setAccessToken(null)
+    window.location = '/'
+  }
+
   return <nav className="navbar navbar-default">
     <div className="container-fluid">
       <div className="navbar-header">
@@ -21,7 +26,7 @@ function NavBar (props) {
         <li>
           {
             accessToken
-              ? <a onClick={() => setAccessToken(null)}>Logout</a>
+              ? <a onClick={handleClick}>Logout</a>
               : null
           }
         </li>
