@@ -12,7 +12,7 @@ import CodeLogin from './AppLib/LoginLib/CodeLogin';
 import EmailPasswordLogin from './AppLib/LoginLib/EmailPasswordLogin';
 import withOptionItems from './AppLib/formLib/withOptionItems';
 import Label from './AppLib/formLib/Label'
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 class App extends Component {
   componentDidMount() {
@@ -120,4 +120,6 @@ export {
   Label,
   setAccessToken,
   StateHOF,
+  ToastContainer,
+  toast,
 }
