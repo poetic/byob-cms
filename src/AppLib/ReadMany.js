@@ -129,7 +129,7 @@ class ReadMany extends React.Component  {
 
     return <div>
       <h1>
-        List of { startCase(pluralize(resource.name)) }
+        List of { startCase(pluralize(resource.name)) } (total: ${total})
         {
           resource.crudMapping.create
             ? <Link
