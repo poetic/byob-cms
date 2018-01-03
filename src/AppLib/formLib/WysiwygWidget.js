@@ -47,27 +47,14 @@ class WysiwygWidget extends Component {
 
   render() {
     const { editorState } = this.state;
-    const { options: { 
-      toolbar,
-      editorClassName,
-    }} = this.props;
-
+    const { options: { wysiwygConfig: { ...otherProps }}} = this.props;
 
     return (
-      <div className="rdw-storybook-root">
-        <Editor
-          editorState={editorState}
-          toolbar={{
-            options: toolbar,
-          }}
-          editorClassName={editorClassName}
-          onEditorStateChange={this.onEditorStateChange}
-        />
-        <textarea
-          disabled
-          value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-        />
-      </div>
+      <Editor
+        editorState={editorState}
+        onEditorStateChange={this.onEditorStateChange}
+        {...otherProps}
+      />
     )
   }
 }

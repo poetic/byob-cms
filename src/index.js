@@ -276,8 +276,12 @@ const AdminGqlCmsConfig = {
               itemContent: {
                 'ui:widget': 'wysiwygWidget',
                 'ui:options':  {
-                  toolbar: ['link'],
-                  editorClassName: 'form-control',
+                  wysiwygConfig: {
+                    toolbar: {
+                      options: ['link']
+                    },
+                    editorClassName: 'form-control',
+                  },
                   blockType: 'unordered-list-item'
                 }
               }
