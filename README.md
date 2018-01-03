@@ -282,8 +282,7 @@ const config = {
   Wysiwyg Widget use [React Draft Wysiwyg](https://github.com/jpuri/react-draft-wysiwyg).  
   props:
   - ui:options
-    - toolbar: Array of options. You can find the full list here https://github.com/jpuri/react-draft-wysiwyg/blob/master/src/config/defaultToolbar.js
-    - editorClassName: Class for Main Editor
-    - blockType: Use this if you want to start your wysiwyg with a specific container. For example, specify `blockType: 'unordered-list-item'` will begin your wysiwyg with an unordered list element.
+    - wysiwygConfig: An array of props passing directly to Editor Component. You can find the full list of props here https://github.com/jpuri/react-draft-wysiwyg/blob/master/src/config/defaultToolbar.js
+    - blockType: This is a special prop that does not use directly in the Editor component. Use this if you want to start your wysiwyg with a specific container. For example, specify `blockType: 'unordered-list-item'` will begin your wysiwyg with an unordered list element.
 - hasManyField  
   Same as hasOneWidget, but for array of values
