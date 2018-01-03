@@ -1,12 +1,13 @@
 {
   "name": "byob-cms",
-  "version": "1.19.3",
+  "version": "1.19.4",
   "description": "Bring your own backend! A client side only cms that speaks graphQL.",
   "main": "index.js",
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "draft-js": "^0.10.4",
     "draftjs-to-html": "^0.8.2",
+    "html-to-draftjs": "^1.1.2",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
     "qs": "^6.5.1",

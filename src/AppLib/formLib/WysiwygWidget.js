@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { isEmpty } from 'lodash';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw, ContentState, convertFromHTML, ContentBlock } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, ContentBlock } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 class WysiwygWidget extends Component {
@@ -12,12 +13,12 @@ class WysiwygWidget extends Component {
     const { value, options: { blockType } } = this.props;
 
     if (!isEmpty(value)) {
+      const blocksFromHtml = htmlToDraft(value);
+      const { contentBlocks, entityMap } = blocksFromHtml;
+      const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+
       this.state = {
-        editorState: EditorState.createWithContent(
-          ContentState.createFromBlockArray(
-            convertFromHTML(value)
-          )
-        ),
+        editorState: EditorState.createWithContent(contentState),
       }
     } else if (!isEmpty(blockType)) {
       this.state = {
