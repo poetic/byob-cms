@@ -47,13 +47,13 @@ class WysiwygWidget extends Component {
 
   render() {
     const { editorState } = this.state;
-    const { options: { wysiwygConfig: { ...otherProps }}} = this.props;
+    const { options: { wysiwygConfig }} = this.props;
 
     return (
       <Editor
         editorState={editorState}
         onEditorStateChange={this.onEditorStateChange}
-        {...otherProps}
+        {...wysiwygConfig}
       />
     )
   }
