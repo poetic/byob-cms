@@ -19,17 +19,15 @@ class WysiwygWidget extends Component {
           )
         ),
       }
+    } else if (!isEmpty(blockType)) {
+      this.state = {
+        editorState: EditorState.createWithContent(ContentState.createFromBlockArray([new ContentBlock({
+          type: blockType
+        })])),
+      }
     } else {
-      if (!isEmpty(blockType)) {
-        this.state = {
-          editorState: EditorState.createWithContent(ContentState.createFromBlockArray([new ContentBlock({
-            type: blockType
-          })])),
-        }
-      } else {
-        this.state = {
-          editorState: EditorState.createEmpty(),
-        }
+      this.state = {
+        editorState: EditorState.createEmpty(),
       }
     }
     
