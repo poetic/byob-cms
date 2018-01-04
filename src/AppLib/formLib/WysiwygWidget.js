@@ -30,8 +30,20 @@ class WysiwygWidget extends Component {
       this.state = {
         editorState: EditorState.createEmpty(),
       }
+    } 
+  }
+  
+  componentWillReceiveProps = nextProps => {
+    const { value } = nextProps;
+    if (!isEmpty(value)) {
+      const blocksFromHtml = htmlToDraft(value);
+      const { contentBlocks, entityMap } = blocksFromHtml;
+      const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+
+      this.state = {
+        editorState: EditorState.createWithContent(contentState),
+      }
     }
-    
   }
 
   onEditorStateChange = editorState => {
