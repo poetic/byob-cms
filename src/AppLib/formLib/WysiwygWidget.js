@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { isEmpty } from 'lodash';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw, ContentState, ContentBlock } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, ContentBlock, Modifier } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+import { stateFromHTML } from 'draft-js-import-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 class WysiwygWidget extends Component {
@@ -13,9 +13,7 @@ class WysiwygWidget extends Component {
     const { value, options: { blockType } } = this.props;
 
     if (!isEmpty(value)) {
-      const blocksFromHtml = htmlToDraft(value);
-      const { contentBlocks, entityMap } = blocksFromHtml;
-      const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+      const contentState = stateFromHTML(value)
 
       this.state = {
         editorState: EditorState.createWithContent(contentState),
@@ -30,20 +28,35 @@ class WysiwygWidget extends Component {
       this.state = {
         editorState: EditorState.createEmpty(),
       }
-    } 
+    }
+
+    this.handlePastedText = this.handlePastedText.bind(this);
   }
   
   componentWillReceiveProps = nextProps => {
     const { value } = nextProps;
     if (!isEmpty(value)) {
-      const blocksFromHtml = htmlToDraft(value);
-      const { contentBlocks, entityMap } = blocksFromHtml;
-      const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+      const contentState = stateFromHTML(value)
 
       this.state = {
         editorState: EditorState.createWithContent(contentState),
       }
     }
+  }
+
+  handlePastedText = (text, html) => {
+
+    const { editorState } = this.state
+
+    const blockMap = stateFromHTML(html).blockMap
+
+    const newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
+
+    this.setState({
+      editorState: EditorState.push(editorState, newState, 'insert-fragment'),
+    });
+
+    return true;
   }
 
   onEditorStateChange = editorState => {
@@ -53,7 +66,7 @@ class WysiwygWidget extends Component {
     
     const { onChange } = this.props;
 
-    onChange(draftToHtml(convertToRaw(editorState.getCurrentContent())))
+    onChange(draftToHtml(convertToRaw(editorState.getCurrentContent())));
   };
 
   render() {
@@ -64,6 +77,7 @@ class WysiwygWidget extends Component {
       <Editor
         editorState={editorState}
         onEditorStateChange={this.onEditorStateChange}
+        handlePastedText={this.handlePastedText}
         {...wysiwygConfig}
       />
     )

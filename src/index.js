@@ -11,12 +11,6 @@ import { ToastContainer } from 'react-toastify'
 
 const graphqlUrl = 'http://localhost:4000/admin-graphql'
 
-const LIFE_EVENT_NAME_MAP = {
-  'contactsThoughts': 'He or She Might Be Thinking About...',
-  'toSays': 'Words That Might Be Encouraging',
-  'notToSays': 'Words That Might Be Discouraging',
-};
-
 const AdminGqlCmsConfig = {
   brand: 'Encouragement CMS',
   title: 'Encouragement CMS',
@@ -180,8 +174,6 @@ const AdminGqlCmsConfig = {
             'subTitle',
             'imageId',
             'published',
-            'notToSays',
-            'toSays',
             'lifeEventCategoryId',
             'dropIds'
           ],
@@ -231,30 +223,6 @@ const AdminGqlCmsConfig = {
                 'itemTitle': 'Words That Might Be Discouraging',
               }],
             },
-            contactsThoughts: {
-              title: LIFE_EVENT_NAME_MAP['contactsThoughts'],
-              type: 'array',
-              default: [],
-              items: {
-                type: 'string'
-              }
-            },
-            toSays: {
-              title: LIFE_EVENT_NAME_MAP['toSays'],
-              type: 'array',
-              default: [],
-              items: {
-                type: 'string'
-              }
-            },
-            notToSays: {
-              title: LIFE_EVENT_NAME_MAP['notToSays'],
-              type: 'array',
-              default: [],
-              items: {
-                type: 'string'
-              }
-            },
             lifeEventCategoryId: {
               type: 'string',
             },
@@ -278,7 +246,13 @@ const AdminGqlCmsConfig = {
                 'ui:options':  {
                   wysiwygConfig: {
                     toolbar: {
-                      options: ['link']
+                      options: ['link', 'list', 'remove'],
+                      link: {
+                        showOpenOptionOnHover: false,
+                      },
+                      list: {
+                        options: ['unordered'],
+                      },
                     },
                     editorClassName: 'form-control',
                   },
@@ -662,8 +636,6 @@ const ContentEditorGqlCmsConfig = {
             'subTitle',
             'imageUrl',
             'durationDescription',
-            'notToSays',
-            'toSays',
             'lifeEventCategoryId',
             'dropIds'
           ],
@@ -679,22 +651,6 @@ const ContentEditorGqlCmsConfig = {
             },
             durationDescription: {
               type: 'string'
-            },
-            notToSays: {
-              title: 'Things not to say',
-              type: 'array',
-              default: [],
-              items: {
-                type: 'string'
-              }
-            },
-            toSays: {
-              title: 'What to say instead',
-              type: 'array',
-              default: [],
-              items: {
-                type: 'string'
-              }
             },
             lifeEventCategoryId: {
               type: 'string',
