@@ -1,10 +1,20 @@
 import React, { Component } from 'react'
 import { isEmpty } from 'lodash';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw, ContentState, ContentBlock, Modifier } from 'draft-js';
+import {
+  EditorState,
+  convertToRaw,
+  ContentState,
+  ContentBlock,
+  Modifier,
+  CharacterMetadata,
+  genKey,
+} from 'draft-js';
+import { List, Repeat } from 'immutable';
 import draftToHtml from 'draftjs-to-html';
 import { stateFromHTML } from 'draft-js-import-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { getSelectedBlocksType } from 'draftjs-utils';
 
 class WysiwygWidget extends Component {
   constructor(props) {
@@ -30,7 +40,7 @@ class WysiwygWidget extends Component {
       }
     }
 
-    this.handlePastedText = this.handlePastedText.bind(this);
+    // this.handlePastedText = this.handlePastedText.bind(this);
   }
   
   componentWillReceiveProps = nextProps => {
@@ -45,12 +55,24 @@ class WysiwygWidget extends Component {
   }
 
   handlePastedText = (text, html) => {
+    const linesFromText = text.split('\n');
 
-    const { editorState } = this.state
+    const { editorState } = this.state;
 
-    const blockMap = stateFromHTML(html).blockMap
+    const currentBlockType = getSelectedBlocksType(editorState);
 
-    const newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
+    const contentBlocksArray = linesFromText.map(line => {
+      return new ContentBlock({
+        key: genKey(),
+        type: currentBlockType,
+        characterList: new List(Repeat(CharacterMetadata.create(), line.length)),
+        text: line,
+      });
+    });
+
+    const blockMap = ContentState.createFromBlockArray(contentBlocksArray).blockMap;
+
+    const newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap);
 
     this.setState({
       editorState: EditorState.push(editorState, newState, 'insert-fragment'),

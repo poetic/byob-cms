@@ -246,7 +246,7 @@ const AdminGqlCmsConfig = {
                 'ui:options':  {
                   wysiwygConfig: {
                     toolbar: {
-                      options: ['link', 'list', 'remove'],
+                      options: ['link', 'list'],
                       link: {
                         showOpenOptionOnHover: false,
                       },

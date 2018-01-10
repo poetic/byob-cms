@@ -8,6 +8,7 @@
     "draft-js": "^0.10.4",
     "draft-js-import-html": "^1.2.1",
     "draftjs-to-html": "^0.8.2",
+    "draftjs-utils": "^0.9.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
     "qs": "^6.5.1",
