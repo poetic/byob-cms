@@ -65,15 +65,6 @@ class App extends Component {
       <div>
         <BrowserRouter>
           <div>
-            <ToastContainer
-              position="top-center"
-              type="default"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              pauseOnHover
-            />
             <NavBar config={config}/>
             <div className="container-fluid">
               <Route render={(props) => <IndexRoute {...props} config={config}/>} />
@@ -112,7 +103,22 @@ function AppWithGuard (props) {
   return <ComponentWithState {...props}/>
 }
 
-export default StateHOF(AppWithGuard);
+function AppWithToast (props) {
+  return <div>
+    <ToastContainer
+      position="top-center"
+      type="default"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      pauseOnHover
+    />
+    <AppWithGuard {...props}/>
+  </div>
+}
+
+export default StateHOF(AppWithToast);
 export {
   CodeLogin,
   EmailPasswordLogin,
