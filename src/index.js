@@ -14,8 +14,15 @@ const graphqlUrl = 'http://localhost:4000/admin-graphql'
 const AdminGqlCmsConfig = {
   brand: 'Encouragement CMS',
   title: 'Encouragement CMS',
-  Login: EmailPasswordLogin,
   graphqlUrl,
+  jsonSchemaFormExtensions: {
+    // widgets: {
+    //   imageWidget: ImageWidget,
+    // },
+    // fields: {
+    //   sortableField: SortableField,
+    // },
+  },
   readManySchema: {
     cellFormatter(value, object, fieldName) {
       if (value && typeof value === 'object') {
@@ -37,6 +44,30 @@ const AdminGqlCmsConfig = {
   resources: [
     {
       // NOTE: name is singular
+      name: 'user',
+      uniqKey: '_id',
+      crudMapping: {
+        readMany: 'users',
+        readOne: 'user',
+      },
+      readManySchema: {
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            fullName: {
+              type: 'string'
+            },
+            email: {
+              type: 'number'
+            },
+          }
+        }
+      },
+      defaultSchema: {
+      },
+    },
+    {
+      // NOTE: name is singular
       name: 'lifeEventCategory',
       uniqKey: '_id',
       crudMapping: {
@@ -53,12 +84,15 @@ const AdminGqlCmsConfig = {
             title: {
               type: 'string'
             },
+            sortIndex: {
+              type: 'number'
+            },
           }
         }
       },
       defaultSchema: {
         jsonSchema: {
-          title: 'Life Event',
+          title: 'Life Event Category',
           type: 'object',
           required: [
             'title',
@@ -67,9 +101,25 @@ const AdminGqlCmsConfig = {
             title: {
               type: 'string'
             },
+            sortIndex: {
+              type: 'number',
+              default: 1000,
+            },
+            lifeEventIds: {
+              title: 'Sort Associated Life Events',
+              type: 'array',
+              default: [],
+              items: {
+                type: 'string'
+              }
+            }
           }
         },
-        uiSchema: { },
+        uiSchema: {
+          lifeEventIds: {
+            'ui:field': 'sortableField',
+          }
+        },
       },
     },
     {
@@ -84,12 +134,34 @@ const AdminGqlCmsConfig = {
         // delete: 'deleteLifeEvent',
       },
       readManySchema: {
+        // NOTE for now this is a hack since we can only render
+        // one field for this object
+        cellFormatter(value, object, fieldName) {
+          if (fieldName === 'published') {
+            return value ? 'Yes' : 'No'
+          }
+          if (value && typeof value === 'object') {
+            return value.title
+          }
+          return value
+        },
         jsonSchema: {
           type: 'object',
           properties: {
             title: {
               type: 'string'
             },
+            lifeEventCategory: {
+              type: 'object',
+              properties: {
+                title: {
+                  type: 'string',
+                }
+              }
+            },
+            published: {
+              type: 'boolean',
+            }
           }
         }
       },
@@ -100,10 +172,8 @@ const AdminGqlCmsConfig = {
           required: [
             'title',
             'subTitle',
-            'imageUrl',
-            'durationDescription',
-            'notToSays',
-            'toSays',
+            'imageId',
+            'published',
             'lifeEventCategoryId',
             'dropIds'
           ],
@@ -111,30 +181,47 @@ const AdminGqlCmsConfig = {
             title: {
               type: 'string'
             },
+            slug: {
+              type: 'string',
+              title: 'Url Slug',
+            },
+            published: {
+              type: 'boolean',
+              default: false
+            },
             subTitle: {
               type: 'string'
             },
-            imageUrl: {
+            imageId: {
               type: 'string'
             },
             durationDescription: {
               type: 'string'
             },
-            notToSays: {
-              title: 'Things not to say',
-              type: 'array',
-              default: [],
-              items: {
-                type: 'string'
-              }
+            sponsoredBy: {
+              type: 'string'
             },
-            toSays: {
-              title: 'What to say instead',
+            lifeEventContentItems: {
               type: 'array',
-              default: [],
               items: {
-                type: 'string'
-              }
+                type: 'object',
+                properties: {
+                  itemTitle: {
+                    type: 'string'
+                  },
+                  itemContent: {
+                    type: 'string'
+                  }
+                }
+              },
+              default: [
+              {
+                'itemTitle': 'He or She Might Be Thinking About...',
+              }, {
+                'itemTitle': 'Words That Might Be Encouraging',
+              }, {
+                'itemTitle': 'Words That Might Be Discouraging',
+              }],
             },
             lifeEventCategoryId: {
               type: 'string',
@@ -149,6 +236,31 @@ const AdminGqlCmsConfig = {
           }
         },
         uiSchema: {
+          // imageId: {
+          //   'ui:widget': 'imageWidget',
+          // },
+          lifeEventContentItems: {
+            items: {
+              itemContent: {
+                'ui:widget': 'wysiwygWidget',
+                'ui:options':  {
+                  wysiwygConfig: {
+                    toolbar: {
+                      options: ['link', 'list'],
+                      link: {
+                        showOpenOptionOnHover: false,
+                      },
+                      list: {
+                        options: ['unordered'],
+                      },
+                    },
+                    editorClassName: 'form-control',
+                  },
+                  blockType: 'unordered-list-item'
+                }
+              }
+            },
+          },
           lifeEventCategoryId: {
             'ui:widget': 'hasOneWidget',
           },
@@ -199,16 +311,16 @@ const AdminGqlCmsConfig = {
             type: {
               type: 'string',
               enum: [
-                'DROP_TYPE_WORD',
-                'DROP_TYPE_GIFT',
-                'DROP_TYPE_EXPE',
                 'DROP_TYPE_AUDI',
+                'DROP_TYPE_EXPE',
+                'DROP_TYPE_GIFT',
+                'DROP_TYPE_WORD',
               ],
               enumNames: [
-                'word',
-                'gift',
-                'experience',
                 'audio / video',
+                'experience',
+                'gift',
+                'word',
               ],
             },
             url: {
@@ -363,9 +475,107 @@ const AdminGqlCmsConfig = {
             question: {
               type: 'string'
             },
+            tagIds: {
+              type: 'array',
+              items: {
+                type: 'string',
+              }
+            },
           }
         },
-        uiSchema: { },
+        uiSchema: {
+          tagIds: {
+            'ui:field': 'hasManyField',
+          }
+        },
+      },
+    },
+    {
+      name: 'hallmarkHoliday',
+      uniqKey: '_id',
+      crudMapping: {
+        readMany: 'hallmarkHolidays',
+        readOne: 'hallmarkHoliday',
+        create: 'createHallmarkHoliday',
+        update: 'updateHallmarkHoliday',
+        // delete: 'deleteHallmarkHoliday',
+      },
+      readManySchema: {
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string'
+            },
+          }
+        }
+      },
+      defaultSchema: {
+        jsonSchema: {
+          title: 'Tag Question',
+          type: 'object',
+          required: [
+            'title',
+            'type',
+          ],
+          properties: {
+            title: {
+              type: 'string'
+            },
+            content: {
+              type: 'string'
+            },
+            // type: {
+            //   type: 'string',
+            //   enum: Object.keys(HALLMARK_HOLIDAY_TYPE_MAP),
+            //   enumNames: Object.values(HALLMARK_HOLIDAY_TYPE_MAP),
+            // },
+            // monthAndDay: {
+            //   type: 'object',
+            //   properties: {
+            //     month: {
+            //       type: 'number',
+            //       enum: Object.keys(MONTHS_MAP).map(Number),
+            //       enumNames: Object.values(MONTHS_MAP)
+            //     },
+            //     dayOfMonth: {
+            //       type: 'number',
+            //       enum: range(1, 32),
+            //     }
+            //   }
+            // },
+            // monthOccurrenceAndDayOfWeek: {
+            //   type: 'object',
+            //   properties: {
+            //     month: {
+            //       type: 'number',
+            //       enum: Object.keys(MONTHS_MAP).map(Number),
+            //       enumNames: Object.values(MONTHS_MAP)
+            //     },
+            //     occurrence: {
+            //       title: '',
+            //       type: 'number',
+            //       enum: [
+            //         0,1,2,3,4,5
+            //       ],
+            //       enumNames: [
+            //         '1st',
+            //         '2nd',
+            //         '3rd',
+            //         '4th',
+            //         '5th',
+            //         '6th',
+            //       ]
+            //     },
+            //     // dayOfWeek: {
+            //       // type: 'number',
+            //       // enum: Object.keys(DAYS_OF_WEEK_MAP).map(Number),
+            //       // enumNames: Object.values(DAYS_OF_WEEK_MAP),
+            //     // },
+            //   },
+            // },
+          },
+        },
       },
     },
   ]
@@ -426,8 +636,6 @@ const ContentEditorGqlCmsConfig = {
             'subTitle',
             'imageUrl',
             'durationDescription',
-            'notToSays',
-            'toSays',
             'lifeEventCategoryId',
             'dropIds'
           ],
@@ -443,22 +651,6 @@ const ContentEditorGqlCmsConfig = {
             },
             durationDescription: {
               type: 'string'
-            },
-            notToSays: {
-              title: 'Things not to say',
-              type: 'array',
-              default: [],
-              items: {
-                type: 'string'
-              }
-            },
-            toSays: {
-              title: 'What to say instead',
-              type: 'array',
-              default: [],
-              items: {
-                type: 'string'
-              }
             },
             lifeEventCategoryId: {
               type: 'string',

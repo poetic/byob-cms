@@ -1,6 +1,7 @@
 import React from 'react'
 import Form from "react-jsonschema-form";
 import HasOneWidget from './formLib/HasOneWidget'
+import WysiwygWidget from './formLib/WysiwygWidget'
 import HasManyField from './formLib/HasManyField'
 import FieldTemplate from './formLib/FieldTemplate'
 // NOTE: TitleField is used for ArrayField
@@ -31,6 +32,7 @@ function FormButtons (props) {
 
 const defaultWidgets = {
   hasOneWidget: HasOneWidget,
+  wysiwygWidget: WysiwygWidget,
 }
 
 const defaultFields = {
