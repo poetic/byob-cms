@@ -14,6 +14,7 @@ import Tr from './ReadManyLib/Tr'
 import Paginate from './ReadManyLib/Paginate'
 import Search from './ReadManyLib/Search'
 import ThField from './ReadManyLib/ThField'
+import alertFirstGqlMsg from '../alertFirstGqlMsg'
 
 const DEFAULT_ITEMS_PER_PAGE = 15
 
@@ -77,6 +78,8 @@ class ReadMany extends React.Component  {
         })
       })
       .catch((e) => {
+        alertFirstGqlMsg(e);
+
         throw e;
       })
   }
@@ -98,15 +101,18 @@ class ReadMany extends React.Component  {
       readManySchema,
     } = this.props
 
-    const columnNames = Object.keys(readManySchema.jsonSchema.properties)
+    const { properties } = readManySchema.jsonSchema
+    const columnNames = Object.keys(properties)
 
     const thActionsElement = <th style={{ textAlign: 'right' }} key="actions">
       Actions
     </th>
     const thFieldElements = columnNames.map((columnName) => {
+      const { title } = properties[columnName]
+
       return <ThField
         key={columnName}
-        columnName={columnName}
+        columnName={title || columnName}
         readManySchema={readManySchema}
         sort={sort}
         onSortChange={(nextSort) => {
