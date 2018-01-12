@@ -5,7 +5,7 @@ function alertFirstGqlMsg (e) {
   try {
     message = e.graphQLErrors[0].message
   } catch (discardedError) {
-    message = e
+    message = e.message
   }
   console.log(e)
   toast.error(message)
