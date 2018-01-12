@@ -44,28 +44,43 @@ class Login extends React.Component {
       justifyContent: 'center',
       alignItems: 'center',
     }
+    const formStyle = {
+      width: '300px',
+      maxWidth: '100%',
+    }
+    const h1Style = {
+      marginBottom: '20px',
+    }
     const buttonStyle = {
       width: '100%',
     }
 
     return <div style={containerStyle}>
-      <h1>Login</h1>
-      <form onSubmit={onSubmit}>
+      <h1 style={h1Style}>Login</h1>
+      <form onSubmit={onSubmit} style={formStyle}>
         <input
-          placeholder="email"
+          className="form-control"
+          placeholder="Email"
           type="email"
           value={this.state.email}
           onChange={e => this.setState({ email: e.target.value })}
         />
         <br/>
         <input
-          placeholder="password"
+          className="form-control"
+          placeholder="Password"
           type="password"
           value={this.state.password}
           onChange={e => this.setState({ password: e.target.value })}
         />
         <br/>
-        <button type="submit" style={buttonStyle}>Login</button>
+        <button
+          className="btn btn-primary"
+          type="submit"
+          style={buttonStyle}
+        >
+          Login
+        </button>
       </form>
     </div>
   }
