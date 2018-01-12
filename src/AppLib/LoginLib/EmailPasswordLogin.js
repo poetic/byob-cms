@@ -1,7 +1,7 @@
 import React from 'react'
 import { gql, graphql } from 'react-apollo'
 import alertFirstGqlMsg from '../../alertFirstGqlMsg'
-import { setAccessToken } from '../../StateHOF';
+import { setAccessToken } from '../../StateHOF'
 import { connect } from 'react-redux'
 
 const LoginMutation = gql`
@@ -16,12 +16,20 @@ class Login extends React.Component {
     this.state = {
       email: '',
       password: '',
+      loggingIn: false,
     }
+  }
+
+  componentWillUnmount() {
+    this.setState({ loggingIn: false })
   }
 
   render() {
     const onSubmit = async (e) => {
-      e.preventDefault();
+      e.preventDefault()
+
+      this.setState({ loggingIn: true })
+
       try {
         const response = await this.props.mutate({
           variables: {
@@ -34,7 +42,9 @@ class Login extends React.Component {
         const token = response.data.login
         this.props.setAccessToken(token)
       } catch (e) {
-        alertFirstGqlMsg(e)
+        this.setState({ loggingIn: false }, () => {
+          alertFirstGqlMsg(e)
+        })
       }
     }
 
@@ -55,6 +65,8 @@ class Login extends React.Component {
       width: '100%',
     }
 
+    const { email, password, loggingIn } = this.state
+
     return <div style={containerStyle}>
       <h1 style={h1Style}>Login</h1>
       <form onSubmit={onSubmit} style={formStyle}>
@@ -62,7 +74,7 @@ class Login extends React.Component {
           className="form-control"
           placeholder="Email"
           type="email"
-          value={this.state.email}
+          value={email}
           onChange={e => this.setState({ email: e.target.value })}
         />
         <br/>
@@ -70,7 +82,7 @@ class Login extends React.Component {
           className="form-control"
           placeholder="Password"
           type="password"
-          value={this.state.password}
+          value={password}
           onChange={e => this.setState({ password: e.target.value })}
         />
         <br/>
@@ -78,8 +90,9 @@ class Login extends React.Component {
           className="btn btn-primary"
           type="submit"
           style={buttonStyle}
+          disabled={loggingIn}
         >
-          Login
+          {loggingIn ? 'Logging in...' : 'Login'}
         </button>
       </form>
     </div>
