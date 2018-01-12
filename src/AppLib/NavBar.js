@@ -26,7 +26,7 @@ function NavBar (props) {
         <li>
           {
             accessToken
-              ? <a onClick={handleClick}>Logout</a>
+              ? <a style={{ cursor: 'pointer' }} onClick={handleClick}>Logout</a>
               : null
           }
         </li>
