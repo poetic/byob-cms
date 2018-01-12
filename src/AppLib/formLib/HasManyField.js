@@ -10,6 +10,7 @@ class MultiSelectWidget extends React.Component {
     const {
       optionItems,
       name,
+      schema,
       uiSchema,
       idSchema,
       required,
@@ -20,7 +21,7 @@ class MultiSelectWidget extends React.Component {
     } = this.props
 
     const id = idSchema.$id
-    const label = uiSchema["ui:title"] || name
+    const label = uiSchema['ui:title'] || schema.title || name
     const valueItems = optionItems
       .filter(option => (formData || []).includes(option.value))
 
