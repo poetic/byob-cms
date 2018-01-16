@@ -1,6 +1,6 @@
 import React from 'react'
 import TdAction from './TdAction'
-import { toast } from 'react-toastify'
+import alertFirstGqlMsg from '../../alertFirstGqlMsg'
 
 function Tr (props) {
   const {
@@ -23,7 +23,7 @@ function Tr (props) {
       changeUrl()
       toast.success('Delete Success')
     } catch (e) {
-      toast.error(e)
+      alertFirstGqlMsg(e)
     }
   }
 

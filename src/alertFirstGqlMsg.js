@@ -7,7 +7,7 @@ function alertFirstGqlMsg (e) {
   } catch (discardedError) {
     message = e.message
   }
-  console.log(e)
+  console.error(e)
   toast.error(message)
 }
 
