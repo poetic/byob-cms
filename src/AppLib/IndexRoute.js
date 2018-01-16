@@ -17,10 +17,12 @@ function IndexRoute (props) {
         .resources
         .reduce((acc, resource) => {
           if (resource.crudMapping.readMany) {
-            acc.push(<tr key={resource.name}>
+            const resourceName = resource.displayName || resource.name
+
+            acc.push(<tr key={resourceName}>
               <td>
-                <Link to={`/${resource.name}`}>
-                  {startCase(pluralize(resource.name))}
+                <Link to={`/${resourceName}`}>
+                  {startCase(pluralize(resourceName))}
                 </Link>
               </td>
             </tr>);

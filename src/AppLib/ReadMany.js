@@ -133,16 +133,18 @@ class ReadMany extends React.Component  {
       columnNames={columnNames}
     />)
 
+    const resourceName = resource.displayName || resource.name
+
     return <div>
       <h1>
-        List of { startCase(pluralize(resource.name)) }
+        List of { startCase(pluralize(resourceName)) }
         { readManySchema.showTotal ? ` (total: ${total})` : null }
         {
           resource.crudMapping.create
             ? <Link
               style={{float: 'right'}}
               className="btn btn-primary btn-outline"
-              to={`/${resource.name}/new`}
+              to={`/${resourceName}/new`}
             >
               Add New
             </Link>

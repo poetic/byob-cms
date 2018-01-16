@@ -9,19 +9,22 @@ import alertFirstGqlMsg from '../alertFirstGqlMsg'
 import undefinedToNull from '../formLib/undefinedToNull'
 
 function Create (props) {
-  const { resource, mutate, config, history } = props;
+  const { resource, mutate, config, history } = props
+
+  const resourceName = resource.displayName || resource.name
+
   const onSubmit = async ({ formData }) => {
     const input = undefinedToNull(formData)
     try {
       await mutate({ variables: { input } })
-      history.push(`/${resource.name}`)
+      history.push(`/${resourceName}`)
       toast.success('Create Success')
     } catch (e) {
       alertFirstGqlMsg(e)
     }
   }
   const onCancel = () => {
-    history.push(`/${resource.name}`)
+    history.push(`/${resourceName}`)
   }
   const createSchema = getCRUDSchemaFromResource({
     config,
@@ -29,7 +32,7 @@ function Create (props) {
     crudType: 'create'
   })
   return <div>
-    <h1>Create {startCase(resource.name)}</h1>
+    <h1>Create {startCase(resourceName)}</h1>
     <Form
       jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
       schema={createSchema.jsonSchema}

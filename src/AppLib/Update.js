@@ -22,18 +22,21 @@ function Update (props) {
   if (data.loading) {
     return null;
   }
+
+  const resourceName = resource.displayName || resource.name
+
   const onSubmit = async ({ formData }) => {
     const input = undefinedToNull(formData)
     try {
       await mutate({ variables: { input } })
-      history.push(`/${resource.name}`)
+      history.push(`/${resourceName}`)
       toast.success('Update Success')
     } catch (e) {
       alertFirstGqlMsg(e)
     }
   }
   const onCancel = () => {
-    history.push(`/${resource.name}`)
+    history.push(`/${resourceName}`)
   }
   const updateSchema = getCRUDSchemaFromResource({
     config,
@@ -41,7 +44,7 @@ function Update (props) {
     crudType: 'update'
   })
   return <div>
-    <h1>Update {startCase(resource.name)}</h1>
+    <h1>Update {startCase(resourceName)}</h1>
     <Form
       jsonSchemaFormExtensions={config.jsonSchemaFormExtensions}
       schema={updateSchema.jsonSchema}

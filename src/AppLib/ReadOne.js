@@ -12,8 +12,11 @@ function ReadOne(props) {
   if (data.loading) {
     return null;
   }
+
+  const resourceName = resource.displayName || resource.name
+
   const onCancel = () => {
-    history.push(`/${resource.name}`)
+    history.push(`/${resourceName}`)
   }
   const readOneSchema = getCRUDSchemaFromResource({
     config,

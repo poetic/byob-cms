@@ -31,8 +31,10 @@ class App extends Component {
           update,
         } = resource.crudMapping
 
+        const resourceName = resource.displayName || resource.name
+
         if (readMany) {
-          const path = `/${resource.name}`
+          const path = `/${resourceName}`
           acc.push(<Route
             key={path}
             exact
@@ -41,7 +43,7 @@ class App extends Component {
           />);
         }
         if (create || readOne) {
-          const path = `/${resource.name}/:${uniqKey}`
+          const path = `/${resourceName}/:${uniqKey}`
           acc.push(<Route
             key={path}
             exact
@@ -50,7 +52,7 @@ class App extends Component {
           />);
         }
         if (update) {
-          const path = `/${resource.name}/:${uniqKey}/edit`
+          const path = `/${resourceName}/:${uniqKey}/edit`
           acc.push(<Route
             key={path}
             exact
