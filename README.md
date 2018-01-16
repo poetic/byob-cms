@@ -188,7 +188,9 @@ const config = {
   The backend graphql url used by byob-cms
 - resources
 - resources.[].name  
-  The name of the resource, need to be singular
+  The name of the resource (needs to be singular). Used for GraphQL arguments and input types
+- resources.[].displayName  
+  The display name of the resource (should be singular). Used for titles and routes. If missing, defaults to resources.[].name
 - resources.[].uniqKey  
   Unique key used in your records. Most of the time its 'id' or '\_id'.
 - resources.[].crudMapping  
@@ -236,7 +238,7 @@ const config = {
 - readManySchema.jsonSchema
 - readManySchema.uiSchema
 - readManySchema.cellFormatter  
-  cellFormatter is a funciton used to format each td in the table  
+  cellFormatter is a function used to format each td in the table  
   function signature: (value, object, fieldName) -> ReactElement  
   default value:
   ```
