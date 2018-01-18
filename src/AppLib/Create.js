@@ -1,10 +1,9 @@
+import { upperFirst, startCase } from 'lodash';
 import React from 'react'
 import { gql, graphql } from 'react-apollo'
-import { startCase } from 'lodash';
-import Form from './Form';
-import { upperFirst } from 'lodash';
-import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
 import { toast } from 'react-toastify'
+import Form from './Form';
+import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResource'
 import alertFirstGqlMsg from '../alertFirstGqlMsg'
 import undefinedToNull from '../formLib/undefinedToNull'
 

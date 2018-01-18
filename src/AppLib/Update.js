@@ -1,6 +1,7 @@
+import { startCase, upperFirst } from 'lodash';
 import React from 'react'
 import { gql, graphql } from 'react-apollo'
-import { startCase, upperFirst } from 'lodash';
+import { toast } from 'react-toastify'
 import graphqlWithoutCache from '../graphqlWithoutCache'
 import Form from './Form';
 import jsonSchemaToGqlQuery from '../GqlCmsConfigLib/jsonSchemaToGqlQuery'
@@ -8,7 +9,6 @@ import getCRUDSchemaFromResource from '../GqlCmsConfigLib/getCRUDSchemaFromResou
 import removeTypename from '../removeTypename'
 import nullToUndefined from '../formLib/nullToUndefined'
 import undefinedToNull from '../formLib/undefinedToNull'
-import { toast } from 'react-toastify'
 import alertFirstGqlMsg from '../alertFirstGqlMsg'
 
 function Update (props) {
