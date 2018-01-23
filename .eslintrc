@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "airbnb"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "experimentalDecorators": true
+    }
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "semi": 0,
+    "react/forbid-prop-types": 0,
+    "react/jsx-filename-extension": 0
+  },
+  "globals": {
+    "alert": true,
+    "document": true,
+    "localStorage": true,
+    "window": true
+  }
+}
