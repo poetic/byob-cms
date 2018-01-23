@@ -6,6 +6,7 @@ const CurrencyWidget = ({ options, ...otherProps }) => {
   const mergedOptions = {
     ...options,
     props: {
+      decimalScale: 2,
       placeholder: '$',
       prefix: '$',
       ...options.props,
