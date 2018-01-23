@@ -266,25 +266,36 @@ const config = {
   import { CodeLogin } from 'byob-cms';
   ```
 
-## pre-defined jsonSchema widgets
+## pre-defined jsonSchema widgets and fields
+- numberWidget, currencyWidget (both use [react-number-format](https://github.com/s-yadav/react-number-format))
+    - Formats/filters text input and evaluates field as number value
+    - Passing/overriding props:
+      ```
+      'ui:options': {
+        props: {
+          decimalScale: 0, // Blocks floats
+          allowNegative: false,
+        },
+      },
+      ```
 - hasOneWidget  
-  ```
-  // by default gqlOptionsName is `${fieldName}Options`
-  query ${upperFirst(gqlOptionsName)}Query {
-    ${gqlOptionsName} {
-      value
-      label
+    ```
+    // by default gqlOptionsName is `${fieldName}Options`
+    query ${upperFirst(gqlOptionsName)}Query {
+      ${gqlOptionsName} {
+        value
+        label
+      }
     }
-  }
-  ```
-  props:
-  - ui:options
-  - ui:options.gqlOptionsName
+    ```
+    props:
+    - ui:options
+    - ui:options.gqlOptionsName
 - wysiwygWidget  
-  Wysiwyg Widget use [React Draft Wysiwyg](https://github.com/jpuri/react-draft-wysiwyg).  
-  props:
-  - ui:options
-    - wysiwygConfig: An array of props passing directly to Editor Component. You can find the full list of props here https://github.com/jpuri/react-draft-wysiwyg/blob/master/src/config/defaultToolbar.js
-    - blockType: This is a special prop that does not use directly in the Editor component. Use this if you want to start your wysiwyg with a specific container. For example, specify `blockType: 'unordered-list-item'` will begin your wysiwyg with an unordered list element.
+    Wysiwyg Widget use [React Draft Wysiwyg](https://github.com/jpuri/react-draft-wysiwyg).  
+    props:
+    - ui:options
+      - wysiwygConfig: An array of props passing directly to Editor Component. You can find the full list of props here https://github.com/jpuri/react-draft-wysiwyg/blob/master/src/config/defaultToolbar.js
+      - blockType: This is a special prop that does not use directly in the Editor component. Use this if you want to start your wysiwyg with a specific container. For example, specify `blockType: 'unordered-list-item'` will begin your wysiwyg with an unordered list element.
 - hasManyField  
-  Same as hasOneWidget, but for array of values
+    Same as hasOneWidget, but for array of values
