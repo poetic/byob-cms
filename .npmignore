@@ -1,2 +1,4 @@
+.eslintrc
+
 node_modules/
 build/
