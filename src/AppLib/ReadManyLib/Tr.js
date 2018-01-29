@@ -1,9 +1,11 @@
-import React from 'react'
+import PropTypes from 'prop-types';
+import React from 'react';
+import { gql } from 'react-apollo';
 import { toast } from 'react-toastify';
-import TdAction from './TdAction'
-import alertFirstGqlMsg from '../../alertFirstGqlMsg'
+import TdAction from './TdAction';
+import alertFirstGqlMsg from '../../alertFirstGqlMsg';
 
-function Tr (props) {
+function Tr(props) {
   const {
     row,
     resource,
@@ -11,38 +13,64 @@ function Tr (props) {
     mutate,
     changeUrl,
     columnNames,
-  } = props
+  } = props;
 
   const handleDelete = async () => {
-    const confirm = window.confirm('Are you sure you want to delete?')
+    // eslint-disable-next-line no-alert
+    const confirm = window.confirm('Are you sure you want to delete?');
+
     if (!confirm) {
-      return
+      return;
     }
-    const uniqKeyQuery = { [resource.uniqKey]: row[resource.uniqKey] }
+
+    const { crudMapping, uniqKey } = resource;
+    const uniqKeyQuery = { [uniqKey]: row[uniqKey] };
+
+    const deleteMutation = gql`
+      mutation ${crudMapping.delete}($${uniqKey}: String!) {
+        ${crudMapping.delete}(${uniqKey}: $${uniqKey})
+      }
+    `;
+
     try {
-      await mutate({ variables: uniqKeyQuery })
-      changeUrl()
-      toast.success('Delete Success')
-    } catch (e) {
-      alertFirstGqlMsg(e)
+      await mutate({
+        mutation: deleteMutation,
+        variables: uniqKeyQuery,
+      });
+
+      changeUrl();
+      toast.success('Delete Success');
+    } catch (error) {
+      alertFirstGqlMsg(error);
     }
   }
 
-  const tdFieldElements = columnNames.map((columnName) => {
-    return <td key={columnName}>
+  const tdFieldElements = columnNames.map(columnName => (
+    <td key={columnName}>
       {cellFormatter(row[columnName], row, columnName)}
     </td>
-  })
+  ));
 
-  return <tr>
-    {tdFieldElements}
-    <TdAction
-      key="actions"
-      resource={resource}
-      row={row}
-      handleDelete={handleDelete}
-    />
-  </tr>
+  return (
+    <tr>
+      {tdFieldElements}
+      <TdAction
+        key="actions"
+        resource={resource}
+        row={row}
+        handleDelete={handleDelete}
+      />
+    </tr>
+  );
 }
 
-export default Tr
+Tr.propTypes = {
+  row: PropTypes.object.isRequired,
+  resource: PropTypes.object.isRequired,
+  cellFormatter: PropTypes.func.isRequired,
+  mutate: PropTypes.func.isRequired,
+  changeUrl: PropTypes.func.isRequired,
+  columnNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default Tr;

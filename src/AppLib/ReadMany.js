@@ -1,8 +1,7 @@
 import React from 'react'
 import qs from 'qs'
-import { gql, graphql } from 'react-apollo';
+import { gql, withApollo } from 'react-apollo';
 import { Link } from 'react-router-dom';
-import { withApollo } from 'react-apollo'
 import { get, startCase } from 'lodash'
 import pluralize from 'pluralize'
 import jsonSchemaToGqlQuery from '../GqlCmsConfigLib/jsonSchemaToGqlQuery';
@@ -96,7 +95,7 @@ class ReadMany extends React.Component  {
         sort,
         search,
       },
-      mutate,
+      client: { mutate },
       resource,
       readManySchema,
     } = this.props
@@ -187,45 +186,36 @@ class ReadMany extends React.Component  {
 
 const ReadManyWithApollo = withApollo(ReadMany);
 
-function ReadManyWithData (props) {
+function ReadManyWithData(props) {
   const {
     config,
     resource,
     location,
   } = props;
-  const { uniqKey, crudMapping } = resource;
+
   const readManySchema = getCRUDSchemaFromResource({
     config,
     resource,
     crudType: 'readMany',
-  })
+  });
 
-  let Component = ReadManyWithApollo
-
-  if (crudMapping.delete) {
-    const DeleteQuery = gql`
-  mutation ${crudMapping.delete}($${uniqKey}: String!) {
-    ${crudMapping.delete}(${uniqKey}: $${uniqKey})
-  }
-  `;
-    Component = graphql(DeleteQuery)(Component)
-  }
-
-  const { search } = location
+  const { search } = location;
   const limit = get(
     readManySchema,
     'paginationStrategy.itemsPerPage',
-    DEFAULT_ITEMS_PER_PAGE
-  )
-  const defaultQueryParams = { limit, skip: 0, sort: [], search: '' }
-  const overrideQueryParams = search ? qs.parse(search.substring(1)) : {}
-  const queryParams = { ...defaultQueryParams, ...overrideQueryParams }
+    DEFAULT_ITEMS_PER_PAGE,
+  );
+  const defaultQueryParams = { limit, skip: 0, sort: [], search: '' };
+  const overrideQueryParams = search ? qs.parse(search.substring(1)) : {};
+  const queryParams = { ...defaultQueryParams, ...overrideQueryParams };
 
-  return <Component
-    {...props}
-    queryParams={queryParams}
-    readManySchema={readManySchema}
-  />
+  return (
+    <ReadManyWithApollo
+      {...props}
+      queryParams={queryParams}
+      readManySchema={readManySchema}
+    />
+  );
 }
 
 export default ReadManyWithData
