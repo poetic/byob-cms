@@ -93,7 +93,7 @@ function AppWithGuard (props) {
     if (props.accessToken) {
       return <App {...props}/>
     } else {
-      return Login ? <Login/> : null
+      return Login ? <Login {...props} /> : null
     }
   }
 
