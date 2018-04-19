@@ -20,38 +20,72 @@ class WysiwygWidget extends Component {
   constructor(props) {
     super(props);
 
-    const { value, options: { blockType } } = this.props;
-
-    if (!isEmpty(value)) {
-      const contentState = stateFromHTML(value)
-
-      this.state = {
-        editorState: EditorState.createWithContent(contentState),
-      }
-    } else if (!isEmpty(blockType)) {
-      this.state = {
-        editorState: EditorState.createWithContent(ContentState.createFromBlockArray([new ContentBlock({
-          type: blockType
-        })])),
-      }
-    } else {
-      this.state = {
-        editorState: EditorState.createEmpty(),
-      }
-    }
-
-    // this.handlePastedText = this.handlePastedText.bind(this);
+    const { value } = this.props
+    this.state = this.handleState( value, null, false )
   }
   
-  componentWillReceiveProps = nextProps => {
-    const { value } = nextProps;
-    if (!isEmpty(value)) {
-      const contentState = stateFromHTML(value)
+  // this method is sync and async
+  handleState (newHtml, newEditorState, update = true) {
+    // we will not have a state at the instance construction, so lets make sure
+    // we emulate an empty object for both state and props
+    const { html, editorState } = this.state || {}
+    const { blockType } = this.props || {}
+    let state = {}
 
-      this.state = {
-        editorState: EditorState.createWithContent(contentState),
+    // we dont have html neither editorState
+    if ( isEmpty(newHtml) && ! newEditorState ) {
+      console.log('wysiwyg empty')
+      state = {
+        html: '',
+        editorState: isEmpty( blockType ) ? (
+          EditorState.createEmpty()
+        ):(
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray([
+              new ContentBlock({
+                type: blockType
+              })
+            ])
+          )
+        )
       }
+
+      return update ? this.setState(state) : state
     }
+
+    // we have a different html (editor state doesnt matter here)
+    if ( ! isEmpty( newHtml ) && newHtml != html ) {
+      console.log('wysiwyg from html')
+
+      state = {
+        html: newHtml,
+        editorState: EditorState.createWithContent(
+          stateFromHTML(newHtml)
+        )
+      }
+
+      return update ? this.setState(state) : state
+    }
+
+    // we have an updated editorState, lets create the html version from it
+    if ( newEditorState ) {
+      console.log('wysiwyg from editor state')
+
+      state = {
+        html: draftToHtml(convertToRaw(newEditorState.getCurrentContent())),
+        editorState: newEditorState,
+      }
+
+      return update ? this.setState(state) : state
+    }
+
+    // dont do nothing
+    return {}
+  }
+
+  // lets take advantage of the lifecycle events to manage state directly (advanced)
+  componentWillReceiveProps = ({ value }) => {
+    this.state = { ...this.state, ...this.handleState( value, null, false) }
   }
 
   handlePastedText = (text, html) => {
@@ -74,21 +108,20 @@ class WysiwygWidget extends Component {
 
     const newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap);
 
-    this.setState({
-      editorState: EditorState.push(editorState, newState, 'insert-fragment'),
-    });
-
-    return true;
+    return this.handleState(
+      null,
+      EditorState.push(editorState, newState, 'insert-fragment')
+    );
   }
 
-  onEditorStateChange = editorState => {
-    this.setState({
-      editorState,
-    });
-    
-    const { onChange } = this.props;
+  onEditorStateChange = async (editorState) => {
+    this.handleState(null, editorState)
+    const { html } = this.state
 
-    onChange(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+    const { onChange } = this.props
+    if ( typeof onChange == 'function' ) {
+      await onChange(html)
+    }
   };
 
   render() {
