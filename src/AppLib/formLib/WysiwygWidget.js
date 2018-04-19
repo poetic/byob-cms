@@ -34,7 +34,6 @@ class WysiwygWidget extends Component {
 
     // we dont have html neither editorState
     if ( isEmpty(newHtml) && ! newEditorState ) {
-      console.log('wysiwyg empty')
       state = {
         html: '',
         editorState: isEmpty( blockType ) ? (
@@ -55,8 +54,6 @@ class WysiwygWidget extends Component {
 
     // we have a different html (editor state doesnt matter here)
     if ( ! isEmpty( newHtml ) && newHtml != html ) {
-      console.log('wysiwyg from html')
-
       state = {
         html: newHtml,
         editorState: EditorState.createWithContent(
@@ -69,8 +66,6 @@ class WysiwygWidget extends Component {
 
     // we have an updated editorState, lets create the html version from it
     if ( newEditorState ) {
-      console.log('wysiwyg from editor state')
-
       state = {
         html: draftToHtml(convertToRaw(newEditorState.getCurrentContent())),
         editorState: newEditorState,
