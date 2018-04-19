@@ -24,15 +24,15 @@ class WysiwygWidget extends Component {
     this.state = this.handleState( value, null, false )
   }
   
-  // this method is sync and async
-  handleState (newHtml, newEditorState, update = true) {
+  // this method could switch between sync and async based on the updateState argument
+  handleState (newHtml, newEditorState, updateState = true) {
     // we will not have a state at the instance construction, so lets make sure
     // we emulate an empty object for both state and props
     const { html, editorState } = this.state || {}
     const { blockType } = this.props || {}
     let state = {}
 
-    // we dont have html neither editorState
+    // we dont have the html nor the editorState
     if ( isEmpty(newHtml) && ! newEditorState ) {
       state = {
         html: '',
@@ -49,10 +49,10 @@ class WysiwygWidget extends Component {
         )
       }
 
-      return update ? this.setState(state) : state
+      return updateState ? this.setState(state) : state
     }
 
-    // we have a different html (editor state doesnt matter here)
+    // we have a new html which is different from the state's html (editor state doesnt matter here)
     if ( ! isEmpty( newHtml ) && newHtml != html ) {
       state = {
         html: newHtml,
@@ -61,7 +61,7 @@ class WysiwygWidget extends Component {
         )
       }
 
-      return update ? this.setState(state) : state
+      return updateState ? this.setState(state) : state
     }
 
     // we have an updated editorState, lets create the html version from it
@@ -71,14 +71,14 @@ class WysiwygWidget extends Component {
         editorState: newEditorState,
       }
 
-      return update ? this.setState(state) : state
+      return updateState ? this.setState(state) : state
     }
 
-    // dont do nothing
+    // do nothing
     return {}
   }
 
-  // lets take advantage of the lifecycle events to manage state directly (advanced)
+  // lets take advantage of the lifecycle events to manage the state directly (advanced)
   componentWillReceiveProps = ({ value }) => {
     this.state = { ...this.state, ...this.handleState( value, null, false) }
   }
