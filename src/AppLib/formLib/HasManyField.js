@@ -21,7 +21,7 @@ class MultiSelectWidget extends React.Component {
     } = this.props
 
     const id = idSchema.$id
-    const label = uiSchema['ui:title'] || schema.title || name
+    const lbl = uiSchema['ui:title'] || schema.title || name
     const valueItems = (formData || []).map(item => optionItems.find(opt => opt.value === item))
 
     // NOTE: the reason we do this is to fix a bug in react selectize
@@ -39,11 +39,11 @@ class MultiSelectWidget extends React.Component {
 
     return (
       <div>
-        <Label label={label} required={required} id={id} />
+        <Label label={lbl} required={required} id={id} />
         <MultiSelect
           disabled={disabled || readonly}
           values={valueItems}
-          options={sortBy(optionItems, ({ lbl }) => lbl.toUpperCase())}
+          options={sortBy(optionItems, ({ label }) => label.toUpperCase())}
           onValuesChange={(v) => {
             onChange(v.map(val => val.value))
           }}
