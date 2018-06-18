@@ -5,7 +5,7 @@ function renderValue(item, sortable, items, parent) {
   return (
     <div className="value-wrapper">
       <div className="simple-value">
-        {sortable && item.index > 0 &&
+        {sortable &&
           <span
             role="presentation"
             onClick={() => {
@@ -24,7 +24,7 @@ function renderValue(item, sortable, items, parent) {
           x
         </span>
         <span>{item.label}</span>
-        {sortable && item.index < items.length - 1 &&
+        {sortable &&
           <span
             role="presentation"
             onClick={() => {

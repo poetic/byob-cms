@@ -41,20 +41,27 @@ class MultiSelectWidget extends React.Component {
       let values = valueItems.map(v => v.value)
       const indx = values.indexOf(value)
       if (direction === '<') {
-        values = [
-          ...values.slice(0, indx - 1),
-          value,
-          values[indx - 1],
-          ...values.slice(indx + 1),
-        ]
-      } else {
-        values = [
-          ...values.slice(0, indx),
-          values[indx + 1],
-          value,
-          ...values.slice(indx + 2),
-        ]
+        if (indx > 0) {
+          values = [
+            ...values.slice(0, indx - 1),
+            value,
+            values[indx - 1],
+            ...values.slice(indx + 1),
+          ]
+        }
       }
+
+      if (direction === '>') {
+        if (indx < values.length) {
+          values = [
+            ...values.slice(0, indx),
+            values[indx + 1],
+            value,
+            ...values.slice(indx + 2),
+          ]
+        }
+      }
+
       this.resortItems(values)
     }
 
@@ -63,7 +70,7 @@ class MultiSelectWidget extends React.Component {
         <Label label={lbl} required={required} id={id} />
         <MultiSelect
           disabled={disabled || readonly}
-          values={valueItems.map((v, i) => ({ ...v, index: i }))}
+          values={valueItems}
           options={sortBy(optionItems, ({ label }) => label.toUpperCase())}
           onValuesChange={(v) => {
             onChange(v.map(val => val.value))
